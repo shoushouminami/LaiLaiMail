@@ -147,6 +147,15 @@
             border-radius: 25px;
         }
 
+        .water-mark {
+            position: absolute;
+            right: 35px;
+            bottom: 15px;
+            height: 50px;
+            opacity: 0.6;
+            z-index: 100;
+        }
+
         .msg-text {
             position: absolute;
             left: 25px;
@@ -468,7 +477,8 @@
 <!--            </div>-->
 <!--        </div>-->
         <div class="image-line message">
-            <img class="message-image" src="image/BE41280CC94F619E579A8EA3E24BFD8E.jpg" alt=""/>
+            <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
+            <img class="water-mark" src="image/logo.png">
         </div>
     </div>
 </div>
@@ -505,6 +515,7 @@
 </template>
 <template id="image-line-template">
     <div class="image-line message">
+        <img class="water-mark" src="image/logo.png">
         <img class="message-image" src="" alt=""/>
     </div>
 </template>

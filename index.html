@@ -313,7 +313,7 @@
                 || lineTextElem.dataset.previousHeight !== lineTextElem.clientHeight) {
                 lineTextElem.dataset.previousHeight = lineTextElem.clientHeight;
                 if (lineTextElem.clientHeight > lineTextElem.dataset.singleLineHeight) {
-                    switch (lineTextElem.clientHeight / lineTextElem.dataset.singleLineHeight) {
+                    switch (Math.round(lineTextElem.clientHeight / lineTextElem.dataset.singleLineHeight)) {
                         case 2:
                             toLineElement(lineTextElem.parentElement, "two");
                             break;

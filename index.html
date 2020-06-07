@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LaiLaiMail</title>
+    <title>LaiLaiMail v0.1</title>
     <style>
         @font-face {
             font-family: Noto Sans SC;
@@ -38,7 +38,7 @@
             /*position: absolute;*/
             /*top: 180px;*/
             /*left: 5px;*/
-            width: 400px;
+            width: 390px;
             max-height: 705px;
             border: none;
             /*padding-top: 120px;*/
@@ -147,7 +147,7 @@
         .msg-text {
             position: absolute;
             left: 25px;
-            top: 15px;
+            top: 14px;
             font-family: 'Noto Sans SC', sans-serif;
             font-size: 14px;
             /*font-size: medium;*/
@@ -164,8 +164,30 @@
             /*left: 5px;*/
             width: 400px;
             border: none;
-            padding-top: 120px;
+            padding-top: 20px;
             /*height: 710px;*/
+        }
+
+        .control-line {
+            position: relative;
+            border: none;
+            background: none;
+            height: 50px;
+        }
+
+        .control-button {
+            position: relative;
+            left: 5px;
+            top: 10px;
+            height: 30px;
+            /*border: none;*/
+            /*background: none;*/
+            /*outline: none;*/
+        }
+
+        .control-button:active {
+            /*border-style: groove;*/
+            /*border: none;*/
         }
 
         .disabled {
@@ -388,9 +410,7 @@
                     right: '0',
                     bottom: '0',
                     top: '0'
-                },
-                width: 800,
-                height: 1798
+                }
             };
             domtoimage.toPng(document.querySelector("#capture"), options)
                 .then(function (dataUrl) {
@@ -414,69 +434,70 @@
     <img id="background-img" src="image/background.png" alt=""/>
     <div id="canvas">
         <div id="message-time" contenteditable="true">
-            2020年6月7日 星期六 11 : 05
+            2020年6月7日 星期日 11 : 05
         </div>
 
         <!-- messages are inserted after here -->
-        <div class="one-line message height-adjustable">
-            <img class="one-line-background line-background  height-adjustable one-line-background-left"
-                 src="image/1line-left-1.png" alt=""/>
-            <img class="one-line-background line-background  width-adjustable height-adjustable"
-                 src="image/1line-mid-1.png" alt=""/>
-            <img class="one-line-background line-background  height-adjustable one-line-background-right"
-                 src="image/1line-right-1.png" alt=""/>
-            <div class="one-line-text height-adjustable msg-text" onload="adjustLineLength(this)"
-                 onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑
-            </div>
-        </div>
-        <div class="two-line message">
-            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>
-            <div class="two-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>
-        </div>
-        <div class="three-line message">
-            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>
-            <div class="three-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢
-            </div>
-        </div>
-        <div class="four-line message">
-            <img class="four-line-background line-background " src="image/3line-1.png" alt=""/>
-            <div class="four-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢
-                虽然最近每天都在吃纳豆
-            </div>
-        </div>
+<!--        <div class="one-line message height-adjustable">-->
+<!--            <img class="one-line-background line-background  height-adjustable one-line-background-left"-->
+<!--                 src="image/1line-left-1.png" alt=""/>-->
+<!--            <img class="one-line-background line-background  width-adjustable height-adjustable"-->
+<!--                 src="image/1line-mid-1.png" alt=""/>-->
+<!--            <img class="one-line-background line-background  height-adjustable one-line-background-right"-->
+<!--                 src="image/1line-right-1.png" alt=""/>-->
+<!--            <div class="one-line-text height-adjustable msg-text" onload="adjustLineLength(this)"-->
+<!--                 onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="two-line message">-->
+<!--            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>-->
+<!--            <div class="two-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>-->
+<!--        </div>-->
+<!--        <div class="three-line message">-->
+<!--            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>-->
+<!--            <div class="three-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="four-line message">-->
+<!--            <img class="four-line-background line-background " src="image/3line-1.png" alt=""/>-->
+<!--            <div class="four-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+<!--                虽然最近每天都在吃纳豆-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="image-line message">
             <img class="message-image" src="image/BE41280CC94F619E579A8EA3E24BFD8E.jpg" alt=""/>
         </div>
     </div>
 </div>
 <div id="control">
-    <div id="new-message">
-        <button onclick="appendOneLine()">+气泡</button><button onclick="appendImageLine()">+图片</button>
-        <button onclick="removeLast()">删除最后一个气泡</button>
-        <button onclick="saveImage()">保存截图</button>
+    <div class="control-line">
+        <button class="control-button" onclick="appendOneLine()">+气泡</button>
     </div>
-    <div id="draw">
-
+    <div class="control-line">
+        <button class="control-button" onclick="appendImageLine()">+图片</button>
+    </div>
+    <div class="control-line">
+        <button class="control-button" onclick="removeLast()">删除气泡</button>
+    </div>
+    <div class="control-line">
+        <button class="control-button" onclick="saveImage()">保存截图</button>
     </div>
 </div>
-
-<!--<div class="template" id="one-line-template">-->
-<!--    <div class="one-line">-->
-<!--        <img class="one-line-background height-adjustable" src="image/1line-left-1.png" alt=""/>-->
-<!--        <img class="one-line-background width-adjustable height-adjustable" src="image/1line-mid.png" alt=""/>-->
-<!--        <img class="one-line-background height-adjustable" src="image/1line-right-1.png" alt=""/>-->
-<!--        <div class="one-line-text" onkeyup="addJustLineLength(this)" contenteditable="true">点击我来编辑</div>-->
-<!--    </div>-->
-<!--</div>-->
 <template id="one-line-template">
     <div class="one-line message height-adjustable">
-        <img class="one-line-background line-background height-adjustable one-line-background-left" src="image/1line-left-1.png" alt=""/>
-        <img class="one-line-background line-background width-adjustable height-adjustable" src="image/1line-mid-1.png" alt=""/>
-        <img class="one-line-background line-background height-adjustable one-line-background-right" src="image/1line-right-1.png" alt=""/>
+        <img class="one-line-background line-background height-adjustable one-line-background-left"
+             src="image/1line-left-1.png" alt=""/>
+        <img class="one-line-background line-background width-adjustable height-adjustable" src="image/1line-mid-1.png"
+             alt=""/>
+        <img class="one-line-background line-background height-adjustable one-line-background-right"
+             src="image/1line-right-1.png" alt=""/>
         <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
-        <img class="four-line-background line-background disabled" src="image/3line-1.png" alt=""/>
-        <div class="one-line-text height-adjustable msg-text" onchange="adjustLineLength(this)" onkeydown="adjustLineLength(this)" onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑</div>
+        <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
+        <div class="one-line-text height-adjustable msg-text" onkeypress="adjustLineLength(this)"
+             onkeydown="adjustLineLength(this)" onkeyup="adjustLineLength(this)"  onchange="adjustLineLength(this)" contenteditable="true">
+            点击我来编辑
+        </div>
     </div>
 </template>
 <template id="image-line-template">

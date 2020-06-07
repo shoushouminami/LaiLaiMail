@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LaiLaiMail</title>
+    <style>
+        @font-face {
+            font-family: Noto Sans SC;
+            src: url("font/Noto_Sans_SC/NotoSansSC-Regular.otf") format("opentype");
+        }
+
+        @font-face {
+            font-family: Noto Sans SC;
+            font-weight: bold;
+            src: url("font/Noto_Sans_SC/NotoSansSC-Bold.otf") format("opentype");
+        }
+
+        #capture {
+            position: absolute;
+            left: 75px;
+            top: 75px;
+            /*width: 400px;*/
+            /*height: 890px;*/
+        }
+
+        #background-img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 400px;
+            z-index: -100;
+        }
+
+        #canvas {
+            position: absolute;
+            left: 10px;
+            top: 120px;
+            /*position: absolute;*/
+            /*top: 180px;*/
+            /*left: 5px;*/
+            width: 400px;
+            max-height: 705px;
+            border: none;
+            /*padding-top: 120px;*/
+            /*height: 710px;*/
+            overflow: auto;
+            overflow-y:visible;
+        }
+
+        #message-time {
+            /*position: absolute;*/
+            height: 60px;
+            text-align: center;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: smaller;
+            font-weight: normal;
+            color: #b3b3b3;
+            box-sizing: border-box;
+            padding-top: 20px;
+        }
+
+        #new-message {
+
+        }
+
+        .message {
+            position: relative;
+            display: block;
+            border: none;
+            text-align: left;
+            width: 280px;
+        }
+
+        .one-line {
+            height: 43px;
+            border: none;
+            text-align: left;
+        }
+
+        .two-line {
+            height: 63px;
+            border: none;
+            text-align: left;
+        }
+
+        .three-line {
+            height: 83px;
+            text-align: left;
+        }
+
+        .four-line {
+            height: 103px;
+            text-align: left;
+        }
+
+        .image-line {
+            padding-top: 8px;
+            /*padding-bottom: 8px;*/
+        }
+
+        .line-background {
+            position: relative;
+            border: none;
+            border-image-width: 0;
+            margin: unset;
+            padding: unset;
+            z-index: -50;
+            float: left;
+        }
+
+        .one-line-background {
+            height: 35px;
+            top: 7px;
+        }
+
+        .one-line-background-left {
+            width: 24px;
+        }
+
+        .one-line-background-right {
+            width: 20px;
+        }
+
+        .two-line-background {
+            height: 55px;
+            top: 7px;
+            width: 260px;
+        }
+
+        .three-line-background {
+            top: 7px;
+            height:75px;
+            width: 260px;
+        }
+
+        .four-line-background {
+            top: 7px;
+            height:95px;
+            width: 260px;
+        }
+
+        .message-image {
+            width: 260px;
+            border-radius: 25px;
+        }
+
+        .msg-text {
+            position: absolute;
+            left: 25px;
+            top: 15px;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            /*font-size: medium;*/
+            font-weight: bold;
+            max-width: 220px;
+        }
+
+        #control {
+            position: absolute;
+            left: 500px;
+            top: 75px;
+            /*position: absolute;*/
+            /*top: 180px;*/
+            /*left: 5px;*/
+            width: 400px;
+            border: none;
+            padding-top: 120px;
+            /*height: 710px;*/
+        }
+
+        .disabled {
+            display: none;
+        }
+
+    </style>
+    <script>
+        let lineKeyWords = ["one", "two", "three", "four"];
+
+        function toLineElement(lineElement, lineKeyWord) {
+            lineKeyWords.forEach((w) => {
+                if (lineKeyWord !== w) {
+                    lineElement.classList.remove(w + "-line");
+                }
+            });
+            lineElement.classList.add(lineKeyWord + "-line");
+
+            // activate line background class
+            lineElement.querySelectorAll(".line-background").forEach((e) => {
+                if (e.classList.contains(lineKeyWord + "-line-background")) {
+                    e.classList.remove("disabled");
+                } else {
+                    e.classList.add("disabled");
+                }
+            });
+
+            // change line text class
+            lineElement.querySelectorAll(".msg-text").forEach((e) => {
+                lineKeyWords.forEach((w) => {
+                    if (lineKeyWord !== w) {
+                        lineElement.classList.remove(w + "-line-text");
+                    }
+                });
+                e.classList.add(lineKeyWord + "-line-text");
+            });
+        }
+
+        function toOneLineElement(lineElement) {
+            lineElement.classList.add("one-line");
+            lineElement.classList.remove("two-line");
+            lineElement.classList.remove("three-line");
+
+            // activate two-line backgraound
+            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
+                e.classList.remove("disabled")
+            });
+            lineElement.querySelectorAll(".line-background").forEach((e) => {
+                e.classList.add("disabled")
+            });
+
+            lineElement.querySelectorAll(".msg-text").forEach((e) => {
+                e.classList.add("one-line-text");
+                e.classList.remove("two-line-text");
+                e.classList.remove("three-line-text");
+            });
+        }
+
+        function toTwoLineElement(lineElement) {
+            lineElement.classList.remove("one-line");
+            lineElement.classList.add("two-line");
+            lineElement.classList.remove("three-line");
+
+            // activate two-line backgraound
+            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
+                e.classList.add("disabled")
+            });
+            lineElement.querySelectorAll(".two-line-background").forEach((e) => {
+                e.classList.remove("disabled")
+            });
+            lineElement.querySelectorAll(".three-line-background").forEach((e) => {
+                e.classList.add("disabled")
+            });
+
+            lineElement.querySelectorAll(".msg-text").forEach((e) => {
+                e.classList.remove("one-line-text");
+                e.classList.add("two-line-text");
+                e.classList.remove("three-line-text");
+            });
+        }
+
+        function toThreeLineElement(lineElement) {
+            lineElement.classList.remove("one-line");
+            lineElement.classList.remove("two-line");
+            lineElement.classList.add("three-line");
+
+            // activate two-line backgraound
+            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
+                e.classList.add("disabled")
+            });
+            lineElement.querySelectorAll(".two-line-background").forEach((e) => {
+                e.classList.add("disabled")
+            });
+            lineElement.querySelectorAll(".three-line-background").forEach((e) => {
+                e.classList.remove("disabled")
+            });
+
+            lineElement.querySelectorAll(".msg-text").forEach((e) => {
+                e.classList.remove("one-line-text");
+                e.classList.remove("two-line-text");
+                e.classList.add("three-line-text");
+            });
+        }
+
+        function adjustLineLength(lineTextElem) {
+            for (const bg of lineTextElem.parentElement.querySelectorAll(".width-adjustable")) {
+                bg.style.width = lineTextElem.clientWidth + "px";
+            }
+
+            if (lineTextElem.dataset.previousHeight === undefined
+                || lineTextElem.dataset.previousHeight !== lineTextElem.clientHeight) {
+                lineTextElem.dataset.previousHeight = lineTextElem.clientHeight;
+                if (lineTextElem.clientHeight > lineTextElem.dataset.singleLineHeight) {
+                    switch (lineTextElem.clientHeight / lineTextElem.dataset.singleLineHeight) {
+                        case 2:
+                            toLineElement(lineTextElem.parentElement, "two");
+                            break;
+                        case 3:
+                            toLineElement(lineTextElem.parentElement, "three");
+                            break;
+                        case 4:
+                            toLineElement(lineTextElem.parentElement, "four");
+                    }
+                } else {
+                    toLineElement(lineTextElem.parentElement, "one");
+                }
+            }
+        }
+
+        function appendOneLine() {
+            let template = document.createElement("template");
+            template.innerHTML = document.getElementById("one-line-template").innerHTML;
+            let oneLine = document.getElementById("canvas").appendChild(template.content.firstElementChild);
+            readOriginalHeight(oneLine);
+            adjustLineLength(oneLine.lastElementChild);
+        }
+
+        function removeLast() {
+            let dom = document.getElementById("canvas").lastElementChild;
+            if (dom.classList.contains("message")) {
+                dom.remove();
+            }
+        }
+
+        function readOriginalHeight(elem) {
+            if (elem.classList.contains("height-adjustable")) {
+                elem.dataset.singleLineHeight = elem.clientHeight;
+            }
+
+            for (const dom of elem.querySelectorAll(".height-adjustable")) {
+                if (!dom.dataset.singleLineHeight) {
+                    dom.dataset.singleLineHeight = dom.clientHeight;
+                }
+            }
+        }
+
+        function appendImageLine2(path) {
+            let template = document.createElement("template");
+            template.innerHTML = document.getElementById("image-line-template").innerHTML;
+            let oneLine = document.getElementById("canvas").appendChild(template.content.firstElementChild);
+            oneLine.lastElementChild.setAttribute("src", path);
+        }
+
+        function appendImageFromFile(file) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function(event2) {
+                appendImageLine2(event2.target.result);
+            });
+            reader.readAsDataURL(file);
+        }
+        function appendImageLine() {
+            let fileSelector = document.createElement('input');
+            fileSelector.type = "file";
+            fileSelector.accept = "image/png, image/jpeg";
+            fileSelector.multiple = false;
+            fileSelector.addEventListener("change", function (event) {
+                appendImageFromFile(fileSelector.files[0]);
+            });
+            fileSelector.click();
+        }
+
+        function dropHandler(event) {
+            // console.log(event);
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (event.dataTransfer.items) {
+                // Use DataTransferItemList interface to access the file(s)
+                for (let i = 0; i < event.dataTransfer.items.length; i++) {
+                    // If dropped items aren't files, reject them
+                    if (event.dataTransfer.items[i].kind === 'file') {
+                        var file = event.dataTransfer.items[i].getAsFile();
+                        console.log('... items[' + i + '].name = ' + file.name);
+                    }
+                }
+            }
+
+            if (event.dataTransfer.files) {
+                // Use DataTransferItemList interface to access the file(s)
+                for (let i = 0; i < event.dataTransfer.files.length; i++) {
+                    appendImageFromFile(event.dataTransfer.files[0]);
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            document.body.addEventListener("drop", function (event2) {
+                dropHandler(event2);
+            })
+            document.body.addEventListener("dragover", function (event2) {
+                event2.preventDefault();
+                event2.stopPropagation();
+            })
+        });
+
+        function saveImage() {
+            let options = {
+                style: {
+                    left: '0',
+                    right: '0',
+                    bottom: '0',
+                    top: '0'
+                },
+                width: 800,
+                height: 1798
+            };
+            domtoimage.toPng(document.querySelector("#capture"), options)
+                .then(function (dataUrl) {
+                    // var img = new Image();
+                    // img.src = dataUrl;
+                    // document.getElementById("draw").appendChild(img);
+                    let link = document.createElement("a");
+                    link.download = "lailai-mail.png";
+                    link.href = dataUrl;
+                    // document.body.appendChild(link);
+                    link.click();
+                    // document.body.removeChild(link);
+                    //
+                });
+        }
+    </script>
+    <script src="js/dom-to-image.min.js"></script>
+</head>
+<body>
+<div id="capture">
+    <img id="background-img" src="image/background.png" alt=""/>
+    <div id="canvas">
+        <div id="message-time" contenteditable="true">
+            2020年6月7日 星期六 11 : 05
+        </div>
+
+        <!-- messages are inserted after here -->
+        <div class="one-line message height-adjustable">
+            <img class="one-line-background line-background  height-adjustable one-line-background-left"
+                 src="image/1line-left-1.png" alt=""/>
+            <img class="one-line-background line-background  width-adjustable height-adjustable"
+                 src="image/1line-mid-1.png" alt=""/>
+            <img class="one-line-background line-background  height-adjustable one-line-background-right"
+                 src="image/1line-right-1.png" alt=""/>
+            <div class="one-line-text height-adjustable msg-text" onload="adjustLineLength(this)"
+                 onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑
+            </div>
+        </div>
+        <div class="two-line message">
+            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>
+            <div class="two-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>
+        </div>
+        <div class="three-line message">
+            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>
+            <div class="three-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢
+            </div>
+        </div>
+        <div class="four-line message">
+            <img class="four-line-background line-background " src="image/3line-1.png" alt=""/>
+            <div class="four-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢
+                虽然最近每天都在吃纳豆
+            </div>
+        </div>
+        <div class="image-line message">
+            <img class="message-image" src="image/BE41280CC94F619E579A8EA3E24BFD8E.jpg" alt=""/>
+        </div>
+    </div>
+</div>
+<div id="control">
+    <div id="new-message">
+        <button onclick="appendOneLine()">+气泡</button><button onclick="appendImageLine()">+图片</button>
+        <button onclick="removeLast()">删除最后一个气泡</button>
+        <button onclick="saveImage()">保存截图</button>
+    </div>
+    <div id="draw">
+
+    </div>
+</div>
+
+<!--<div class="template" id="one-line-template">-->
+<!--    <div class="one-line">-->
+<!--        <img class="one-line-background height-adjustable" src="image/1line-left-1.png" alt=""/>-->
+<!--        <img class="one-line-background width-adjustable height-adjustable" src="image/1line-mid.png" alt=""/>-->
+<!--        <img class="one-line-background height-adjustable" src="image/1line-right-1.png" alt=""/>-->
+<!--        <div class="one-line-text" onkeyup="addJustLineLength(this)" contenteditable="true">点击我来编辑</div>-->
+<!--    </div>-->
+<!--</div>-->
+<template id="one-line-template">
+    <div class="one-line message height-adjustable">
+        <img class="one-line-background line-background height-adjustable one-line-background-left" src="image/1line-left-1.png" alt=""/>
+        <img class="one-line-background line-background width-adjustable height-adjustable" src="image/1line-mid-1.png" alt=""/>
+        <img class="one-line-background line-background height-adjustable one-line-background-right" src="image/1line-right-1.png" alt=""/>
+        <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
+        <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
+        <img class="four-line-background line-background disabled" src="image/3line-1.png" alt=""/>
+        <div class="one-line-text height-adjustable msg-text" onchange="adjustLineLength(this)" onkeydown="adjustLineLength(this)" onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑</div>
+    </div>
+</template>
+<template id="image-line-template">
+    <div class="image-line message">
+        <img class="message-image" src="" alt=""/>
+    </div>
+</template>
+</body>
+</html>

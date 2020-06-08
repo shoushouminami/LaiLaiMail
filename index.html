@@ -75,7 +75,7 @@
             display: block;
             border: none;
             text-align: left;
-            width: 280px;
+            width: 300px;
             line-height: 20px;
         }
 
@@ -83,6 +83,7 @@
             height: 43px;
             border: none;
             text-align: left;
+            
         }
 
         .two-line {
@@ -154,7 +155,7 @@
 
         .water-mark {
             position: absolute;
-            right: 35px;
+            right: 55px;
             bottom: 15px;
             height: 50px;
             opacity: 0.6;
@@ -163,11 +164,18 @@
 
         .remove-button {
             position: absolute;
-            right: 7px;
-            top: -3px;
+            right: 30px;
+            top: 0;
             height: 35px;
             width: 35px;
             display: none;
+            z-index: 100;
+        }
+
+        .one-line .remove-button {
+            position: relative;
+            right: 20px;
+            top: -3px;
         }
 
         .message:hover .remove-button, .message:focus .remove-button, .message:active .remove-button{
@@ -369,13 +377,13 @@
         function readOriginalHeight(elem) {
             if (elem.classList.contains("height-adjustable")) {
                 elem.dataset.singleLineHeight = elem.clientHeight;
-                log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
+                // log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
             }
 
             for (const dom of elem.querySelectorAll(".height-adjustable")) {
                 if (!dom.dataset.singleLineHeight) {
                     dom.dataset.singleLineHeight = dom.clientHeight;
-                    log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
+                    // log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
                 }
             }
         }
@@ -401,8 +409,7 @@
             fileSelector.accept = "image/png, image/jpeg";
             fileSelector.multiple = false;
             fileSelector.addEventListener("change", function (event) {
-                log(event);
-                log("appending file name=" + (fileSelector.files[0]).name);
+                // log("appending file name=" + (fileSelector.files[0]).name);
                 appendImageFromFile(fileSelector.files[0]);
                 fileSelector.remove();
             });
@@ -421,17 +428,6 @@
             // console.log(event);
             event.preventDefault();
             event.stopPropagation();
-
-            if (event.dataTransfer.items) {
-                // Use DataTransferItemList interface to access the file(s)
-                for (let i = 0; i < event.dataTransfer.items.length; i++) {
-                    // If dropped items aren't files, reject them
-                    if (event.dataTransfer.items[i].kind === 'file') {
-                        var file = event.dataTransfer.items[i].getAsFile();
-                        console.log('... items[' + i + '].name = ' + file.name);
-                    }
-                }
-            }
 
             if (event.dataTransfer.files) {
                 // Use DataTransferItemList interface to access the file(s)

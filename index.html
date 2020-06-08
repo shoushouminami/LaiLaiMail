@@ -461,33 +461,19 @@
                     top: '0'
                 }
             };
-            domtoimage.toJpeg(document.querySelector("#capture"), options)
+            domtoimage.toPng(document.querySelector("#capture"), options)
                 .then(function (dataUrl) {
                     // var img = new Image();
                     // img.src = dataUrl;
                     // document.getElementById("draw").appendChild(img);
                     let link = document.createElement("a");
-                    link.download = "lailai-mail.jpg";
+                    link.download = "lailai-mail.png";
                     link.href = dataUrl;
-                    link.style.display="none";
-                    document.body.appendChild(link);
+                    // document.body.appendChild(link);
                     link.click();
-                    document.body.removeChild(link);
+                    // document.body.removeChild(link);
                     //
                 });
-            // domtoimage.toPng(document.querySelector("#capture"), options)
-            //     .then(function (dataUrl) {
-            //         // var img = new Image();
-            //         // img.src = dataUrl;
-            //         // document.getElementById("draw").appendChild(img);
-            //         let link = document.createElement("a");
-            //         link.download = "lailai-mail.png";
-            //         link.href = dataUrl;
-            //         // document.body.appendChild(link);
-            //         link.click();
-            //         // document.body.removeChild(link);
-            //         //
-            //     });
         }
     </script>
     <script src="js/dom-to-image.min.js"></script>

@@ -161,7 +161,7 @@
             z-index: 100;
         }
 
-        .delete-button {
+        .remove-button {
             position: absolute;
             right: 7px;
             top: -3px;
@@ -170,7 +170,7 @@
             display: none;
         }
 
-        .message:hover .delete-button, .message:focus .delete-button, .message:active .delete-button{
+        .message:hover .remove-button, .message:focus .remove-button, .message:active .remove-button{
             display: block;
         }
 
@@ -513,7 +513,7 @@
 <!--            </div>-->
 <!--        </div>-->
         <div class="image-line message" onclick="">
-            <img class="delete-button" onclick="removeLine(this)" src="image/delete.png" alt="">
+            <img class="remove-button" onclick="removeLine(this)" src="image/delete.png" alt="">
             <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
             <img class="water-mark" src="image/logo.png">
         </div>
@@ -543,7 +543,7 @@
         <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
-        <img class="delete-button" src="image/delete.png" alt="" onclick="removeLine(this)">
+        <img class="remove-button" src="image/delete.png" alt="" onclick="removeLine(this)">
         <div class="one-line-text height-adjustable msg-text">
             点击我来编辑
         </div>
@@ -551,7 +551,7 @@
 </template>
 <template id="image-line-template">
     <div class="image-line message" onclick="">
-        <img class="delete-button" src="image/delete.png" onclick="removeLine(this)" alt="">
+        <img class="remove-button" src="image/delete.png" onclick="removeLine(this)" alt="">
         <img class="water-mark" src="image/logo.png"  alt=""/>
         <img class="message-image" src="" alt=""/>
     </div>

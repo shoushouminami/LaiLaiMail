@@ -24,8 +24,8 @@
 
         #capture {
             position: absolute;
-            left: 75px;
-            top: 75px;
+            left: 0;
+            top: 0;
             width: 400px;
             height: 900px;
         }
@@ -232,6 +232,11 @@
         }
 
         /*control buttons */
+        #save-button {
+            position: absolute;
+            /*left: 500px;*/
+            top: 910px;
+        }
 
         #control {
             position: absolute;
@@ -456,19 +461,33 @@
                     top: '0'
                 }
             };
-            domtoimage.toPng(document.querySelector("#capture"), options)
+            domtoimage.toJpeg(document.querySelector("#capture"), options)
                 .then(function (dataUrl) {
                     // var img = new Image();
                     // img.src = dataUrl;
                     // document.getElementById("draw").appendChild(img);
                     let link = document.createElement("a");
-                    link.download = "lailai-mail.png";
+                    link.download = "lailai-mail.jpg";
                     link.href = dataUrl;
-                    // document.body.appendChild(link);
+                    link.style.display="none";
+                    document.body.appendChild(link);
                     link.click();
-                    // document.body.removeChild(link);
+                    document.body.removeChild(link);
                     //
                 });
+            // domtoimage.toPng(document.querySelector("#capture"), options)
+            //     .then(function (dataUrl) {
+            //         // var img = new Image();
+            //         // img.src = dataUrl;
+            //         // document.getElementById("draw").appendChild(img);
+            //         let link = document.createElement("a");
+            //         link.download = "lailai-mail.png";
+            //         link.href = dataUrl;
+            //         // document.body.appendChild(link);
+            //         link.click();
+            //         // document.body.removeChild(link);
+            //         //
+            //     });
         }
     </script>
     <script src="js/dom-to-image.min.js"></script>
@@ -518,16 +537,17 @@
     <button id="enter-button" onclick="appendOneLineFromInput()"></button>
     <button id="image-button" onclick="appendImageLine()"></button>
 </div>
-<div id="control">
-    <div class="control-line">
-        <button class="control-button" onclick="appendOneLine()">+文字气泡</button><button class="control-button" onclick="appendImageLine()">+图片气泡</button>
-    </div>
-    <div class="control-line">
-        <button class="control-button" onclick="removeLast()">-删除气泡</button><button class="control-button" onclick="saveImage()">√保存截图</button>
-    </div>
-    <div id="log-area">
-    </div>
-</div>
+<button id="save-button" onclick="saveImage()">√保存截图</button>
+<!--<div id="control">-->
+<!--    <div class="control-line">-->
+<!--        <button class="control-button" onclick="appendOneLine()">+文字气泡</button><button class="control-button" onclick="appendImageLine()">+图片气泡</button>-->
+<!--    </div>-->
+<!--    <div class="control-line">-->
+<!--        <button class="control-button" onclick="removeLast()">-删除气泡</button><button class="control-button" onclick="saveImage()">√保存截图</button>-->
+<!--    </div>-->
+<!--    <div id="log-area">-->
+<!--    </div>-->
+<!--</div>-->
 <template id="one-line-template">
     <div class="one-line message height-adjustable" onclick="">
         <img class="one-line-background line-background height-adjustable one-line-background-left"

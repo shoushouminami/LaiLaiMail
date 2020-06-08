@@ -330,7 +330,6 @@
             }
             oneLine.querySelectorAll(".msg-text").forEach((e) => {
                 adjustLineLength(e);
-                fixPositionOnMobile(e);
             })
         }
 
@@ -378,14 +377,22 @@
             });
             reader.readAsDataURL(file);
         }
+
         function appendImageLine() {
-            let fileSelector = document.createElement('input');
+            let fileSelector = document.createElement("input");
             fileSelector.type = "file";
             fileSelector.accept = "image/png, image/jpeg";
             fileSelector.multiple = false;
             fileSelector.addEventListener("change", function (event) {
+                log(event);
+                log("appending file name=" + (fileSelector.files[0]).name);
                 appendImageFromFile(fileSelector.files[0]);
+                fileSelector.remove();
             });
+            // On Mobile Safari, it only works if the element is appending to the document
+            fileSelector.style.display = "none";
+            document.body.appendChild(fileSelector);
+
             fileSelector.click();
         }
 

@@ -4,6 +4,10 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
+    />
     <meta charset="UTF-8">
     <title>LaiLaiMail v0.1</title>
     <style>
@@ -155,6 +159,19 @@
             height: 50px;
             opacity: 0.6;
             z-index: 100;
+        }
+
+        .delete-button {
+            position: absolute;
+            right: 7px;
+            top: -3px;
+            height: 35px;
+            width: 35px;
+            display: none;
+        }
+
+        .message:hover .delete-button, .message:focus .delete-button, .message:active .delete-button{
+            display: block;
         }
 
         .msg-text {
@@ -396,6 +413,10 @@
             fileSelector.click();
         }
 
+        function removeLine(elem) {
+            elem.parentElement.remove();
+        }
+
         function dropHandler(event) {
             // console.log(event);
             event.preventDefault();
@@ -491,7 +512,8 @@
 <!--                虽然最近每天都在吃纳豆-->
 <!--            </div>-->
 <!--        </div>-->
-        <div class="image-line message">
+        <div class="image-line message" onclick="">
+            <img class="delete-button" onclick="removeLine(this)" src="image/delete.png" alt="">
             <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
             <img class="water-mark" src="image/logo.png">
         </div>
@@ -511,7 +533,7 @@
     </div>
 </div>
 <template id="one-line-template">
-    <div class="one-line message height-adjustable">
+    <div class="one-line message height-adjustable" onclick="">
         <img class="one-line-background line-background height-adjustable one-line-background-left"
              src="image/1line-left-1.png" alt=""/>
         <img class="one-line-background line-background width-adjustable height-adjustable" src="image/1line-mid-1.png"
@@ -521,13 +543,15 @@
         <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
+        <img class="delete-button" src="image/delete.png" alt="" onclick="removeLine(this)">
         <div class="one-line-text height-adjustable msg-text">
             点击我来编辑
         </div>
     </div>
 </template>
 <template id="image-line-template">
-    <div class="image-line message">
+    <div class="image-line message" onclick="">
+        <img class="delete-button" src="image/delete.png" onclick="removeLine(this)" alt="">
         <img class="water-mark" src="image/logo.png"  alt=""/>
         <img class="message-image" src="" alt=""/>
     </div>

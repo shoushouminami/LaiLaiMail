@@ -22,8 +22,8 @@
             position: absolute;
             left: 75px;
             top: 75px;
-            /*width: 400px;*/
-            /*height: 890px;*/
+            width: 400px;
+            height: 900px;
         }
 
         #background-img {
@@ -167,6 +167,15 @@
             max-width: 220px;
         }
 
+        #text-input {
+            position: absolute;
+            bottom: 33px;
+            left: 95px;
+            width:220px;
+            background-color: white;
+        }
+        /*control buttons */
+
         #control {
             position: absolute;
             left: 500px;
@@ -206,6 +215,10 @@
 
         .disabled {
             display: none;
+        }
+
+        [contenteditable=true]:empty:not(:focus):before{
+            content:attr(data-text)
         }
 
     </style>
@@ -482,6 +495,8 @@
             <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
             <img class="water-mark" src="image/logo.png">
         </div>
+    </div>
+    <div id="text-input" contenteditable="true" data-text="点我来输入">
     </div>
 </div>
 <div id="control">

@@ -72,6 +72,7 @@
             border: none;
             text-align: left;
             width: 280px;
+            line-height: 20px;
         }
 
         .one-line {
@@ -172,8 +173,39 @@
             bottom: 33px;
             left: 95px;
             width:220px;
+            border: none;
+            outline: 0 solid transparent;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #text-input:not(:empty){
             background-color: white;
         }
+
+        #enter-button {
+            position: absolute;
+            bottom: 25px;
+            right: 15px;
+            width: 50px;
+            height: 35px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        #image-button {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            width: 50px;
+            height: 35px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
         /*control buttons */
 
         #control {
@@ -203,26 +235,34 @@
             top: 10px;
             height: 40px;
             width: 100px;
-            /*border: none;*/
-            /*background: none;*/
-            /*outline: none;*/
         }
 
         .control-button:active {
-            /*border-style: groove;*/
-            /*border: none;*/
         }
 
         .disabled {
             display: none;
         }
 
-        [contenteditable=true]:empty:not(:focus):before{
-            content:attr(data-text)
-        }
+        /*[contenteditable=true]:empty:not(:focus):before{*/
+        /*    content:attr(data-text);*/
+        /*    font-weight: normal;*/
+        /*    color: lightgray;*/
+        /*}*/
 
     </style>
     <script>
+        let logArea;
+        function log(o) {
+            if (!logArea) {
+                logArea = document.getElementById("log-area");
+            }
+
+            if (logArea) {
+                logArea.appendChild(new Text(o + "\n"));
+            }
+        }
+
         let lineKeyWords = ["one", "two", "three", "four"];
 
         function toLineElement(lineElement, lineKeyWord) {
@@ -253,72 +293,6 @@
             });
         }
 
-        function toOneLineElement(lineElement) {
-            lineElement.classList.add("one-line");
-            lineElement.classList.remove("two-line");
-            lineElement.classList.remove("three-line");
-
-            // activate two-line backgraound
-            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
-                e.classList.remove("disabled")
-            });
-            lineElement.querySelectorAll(".line-background").forEach((e) => {
-                e.classList.add("disabled")
-            });
-
-            lineElement.querySelectorAll(".msg-text").forEach((e) => {
-                e.classList.add("one-line-text");
-                e.classList.remove("two-line-text");
-                e.classList.remove("three-line-text");
-            });
-        }
-
-        function toTwoLineElement(lineElement) {
-            lineElement.classList.remove("one-line");
-            lineElement.classList.add("two-line");
-            lineElement.classList.remove("three-line");
-
-            // activate two-line backgraound
-            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
-                e.classList.add("disabled")
-            });
-            lineElement.querySelectorAll(".two-line-background").forEach((e) => {
-                e.classList.remove("disabled")
-            });
-            lineElement.querySelectorAll(".three-line-background").forEach((e) => {
-                e.classList.add("disabled")
-            });
-
-            lineElement.querySelectorAll(".msg-text").forEach((e) => {
-                e.classList.remove("one-line-text");
-                e.classList.add("two-line-text");
-                e.classList.remove("three-line-text");
-            });
-        }
-
-        function toThreeLineElement(lineElement) {
-            lineElement.classList.remove("one-line");
-            lineElement.classList.remove("two-line");
-            lineElement.classList.add("three-line");
-
-            // activate two-line backgraound
-            lineElement.querySelectorAll(".one-line-background").forEach((e) => {
-                e.classList.add("disabled")
-            });
-            lineElement.querySelectorAll(".two-line-background").forEach((e) => {
-                e.classList.add("disabled")
-            });
-            lineElement.querySelectorAll(".three-line-background").forEach((e) => {
-                e.classList.remove("disabled")
-            });
-
-            lineElement.querySelectorAll(".msg-text").forEach((e) => {
-                e.classList.remove("one-line-text");
-                e.classList.remove("two-line-text");
-                e.classList.add("three-line-text");
-            });
-        }
-
         function adjustLineLength(lineTextElem) {
             for (const bg of lineTextElem.parentElement.querySelectorAll(".width-adjustable")) {
                 bg.style.width = lineTextElem.clientWidth + "px";
@@ -344,12 +318,40 @@
             }
         }
 
-        function appendOneLine() {
+        function fixPositionOnMobile(lineTextElem) {
+            // fix for mobile
+            // lineTextElem.style.lineHeight = "20px";
+            // log("lineTextElem.dataset.singleLineHeight=" + lineTextElem.dataset.singleLineHeight)
+            // if (lineTextElem.dataset.singleLineHeight !== "20") {
+            //
+            //     let diff = 20 - lineTextElem.dataset.singleLineHeight;
+            //     lineTextElem.style.top -= diff;
+            // }
+        }
+
+        function appendOneLine(text) {
             let template = document.createElement("template");
             template.innerHTML = document.getElementById("one-line-template").innerHTML;
             let oneLine = document.getElementById("canvas").appendChild(template.content.firstElementChild);
             readOriginalHeight(oneLine);
-            adjustLineLength(oneLine.lastElementChild);
+            if (text) {
+                oneLine.querySelectorAll(".msg-text").forEach((e) => {
+                    e.innerText = text;
+                })
+            }
+            oneLine.querySelectorAll(".msg-text").forEach((e) => {
+                adjustLineLength(e);
+                fixPositionOnMobile(e);
+            })
+        }
+
+        function appendOneLineFromInput() {
+            let input = document.getElementById("text-input");
+            if (input && input.innerText.trim().length > 0) {
+                appendOneLine(input.innerText);
+                input.innerText = "";
+            }
+
         }
 
         function removeLast() {
@@ -362,11 +364,13 @@
         function readOriginalHeight(elem) {
             if (elem.classList.contains("height-adjustable")) {
                 elem.dataset.singleLineHeight = elem.clientHeight;
+                log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
             }
 
             for (const dom of elem.querySelectorAll(".height-adjustable")) {
                 if (!dom.dataset.singleLineHeight) {
                     dom.dataset.singleLineHeight = dom.clientHeight;
+                    log("name=" + elem.name + " class=" + elem.classList +  " elem.dataset.singleLineHeight=" + elem.dataset.singleLineHeight)
                 }
             }
         }
@@ -496,8 +500,9 @@
             <img class="water-mark" src="image/logo.png">
         </div>
     </div>
-    <div id="text-input" contenteditable="true" data-text="点我来输入">
-    </div>
+    <div id="text-input" contenteditable="true" data-text="chat..."></div>
+    <button id="enter-button" onclick="appendOneLineFromInput()"></button>
+    <button id="image-button" onclick="appendImageLine()"></button>
 </div>
 <div id="control">
     <div class="control-line">
@@ -505,6 +510,8 @@
     </div>
     <div class="control-line">
         <button class="control-button" onclick="removeLast()">-删除气泡</button><button class="control-button" onclick="saveImage()">√保存截图</button>
+    </div>
+    <div id="log-area">
     </div>
 </div>
 <template id="one-line-template">
@@ -524,7 +531,7 @@
              onkeyup="adjustLineLength(this)"
              onfocus="adjustLineLength(this)"
              onfocusout="adjustLineLength(this)"
-             contenteditable="true">
+             contenteditable="false">
             点击我来编辑
         </div>
     </div>

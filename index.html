@@ -188,10 +188,12 @@
         }
 
         .control-button {
-            position: relative;
+            position: static;
+            margin-left: 10px;
             left: 5px;
             top: 10px;
-            height: 30px;
+            height: 40px;
+            width: 100px;
             /*border: none;*/
             /*background: none;*/
             /*outline: none;*/
@@ -484,16 +486,10 @@
 </div>
 <div id="control">
     <div class="control-line">
-        <button class="control-button" onclick="appendOneLine()">+气泡</button>
+        <button class="control-button" onclick="appendOneLine()">+文字气泡</button><button class="control-button" onclick="appendImageLine()">+图片气泡</button>
     </div>
     <div class="control-line">
-        <button class="control-button" onclick="appendImageLine()">+图片</button>
-    </div>
-    <div class="control-line">
-        <button class="control-button" onclick="removeLast()">删除气泡</button>
-    </div>
-    <div class="control-line">
-        <button class="control-button" onclick="saveImage()">保存截图</button>
+        <button class="control-button" onclick="removeLast()">-删除气泡</button><button class="control-button" onclick="saveImage()">√保存截图</button>
     </div>
 </div>
 <template id="one-line-template">
@@ -507,8 +503,13 @@
         <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
-        <div class="one-line-text height-adjustable msg-text" onkeypress="adjustLineLength(this)"
-             onkeydown="adjustLineLength(this)" onkeyup="adjustLineLength(this)"  onchange="adjustLineLength(this)" contenteditable="true">
+        <div class="one-line-text height-adjustable msg-text"
+             onkeypress="adjustLineLength(this)"
+             onkeydown="adjustLineLength(this)"
+             onkeyup="adjustLineLength(this)"
+             onfocus="adjustLineLength(this)"
+             onfocusout="adjustLineLength(this)"
+             contenteditable="true">
             点击我来编辑
         </div>
     </div>

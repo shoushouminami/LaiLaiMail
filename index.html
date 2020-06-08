@@ -318,17 +318,6 @@
             }
         }
 
-        function fixPositionOnMobile(lineTextElem) {
-            // fix for mobile
-            // lineTextElem.style.lineHeight = "20px";
-            // log("lineTextElem.dataset.singleLineHeight=" + lineTextElem.dataset.singleLineHeight)
-            // if (lineTextElem.dataset.singleLineHeight !== "20") {
-            //
-            //     let diff = 20 - lineTextElem.dataset.singleLineHeight;
-            //     lineTextElem.style.top -= diff;
-            // }
-        }
-
         function appendOneLine(text) {
             let template = document.createElement("template");
             template.innerHTML = document.getElementById("one-line-template").innerHTML;
@@ -525,20 +514,14 @@
         <img class="two-line-background line-background disabled" src="image/2line-1.png" alt=""/>
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
-        <div class="one-line-text height-adjustable msg-text"
-             onkeypress="adjustLineLength(this)"
-             onkeydown="adjustLineLength(this)"
-             onkeyup="adjustLineLength(this)"
-             onfocus="adjustLineLength(this)"
-             onfocusout="adjustLineLength(this)"
-             contenteditable="false">
+        <div class="one-line-text height-adjustable msg-text">
             点击我来编辑
         </div>
     </div>
 </template>
 <template id="image-line-template">
     <div class="image-line message">
-        <img class="water-mark" src="image/logo.png">
+        <img class="water-mark" src="image/logo.png"  alt=""/>
         <img class="message-image" src="" alt=""/>
     </div>
 </template>

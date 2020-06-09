@@ -264,6 +264,19 @@
             top: 910px;
         }
 
+        @media only screen and (max-device-width: 600px) {
+            #save-button {
+                display: none;
+            }
+
+            #fullscreen-button {
+                display: none;
+            }
+            #help-menu {
+                  display: none;
+            }
+        }
+
         #control {
             position: absolute;
             left: 525px;
@@ -500,7 +513,7 @@
                     // img.src = dataUrl;
                     // document.getElementById("draw").appendChild(img);
                     let link = document.createElement("a");
-                    link.download = "lailai-mail.png";
+                    link.download = "mail-" + document.getElementById("message-time").innerText + ".png";
                     link.href = dataUrl;
                     // document.body.appendChild(link);
                     link.click();
@@ -575,11 +588,13 @@
         <div style="text-align: center; font-weight: bold">来来喵LaiLaiMail <script>document.write(getVersion())</script></div>
         <div>使用说明
             <div>
-                <ol>
+                <ul>
                     <li>文字气泡：点击底部的chat...来输入文字。点击enter来完成输入。</li>
                     <li>图片气泡：点击底部左边 📷 图标来添加图片。图片自动附带水印。</li>
                     <li>删除气泡：点击气泡右上角的x来删除。</li>
-                </ol>
+                    <li>编辑时间戳：点击来来头像下方的日期来编辑时间日期。</li>
+                    <li>保存图片：TBD</li>
+                </ul>
             </div>
         </div>
 

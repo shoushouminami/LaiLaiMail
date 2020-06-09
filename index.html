@@ -4,12 +4,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+<!--    <meta name="apple-mobile-web-app-capable" content="yes">-->
     <meta
             name='viewport'
             content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'
     />
     <meta charset="UTF-8">
-    <title>LaiLaiMail v0.1</title>
+    <title>来来喵LaiLaiMail </title>
     <style>
         @font-face {
             font-family: Noto Sans SC;
@@ -22,12 +23,31 @@
             src: url("font/Noto_Sans_SC/NotoSansSC-Bold.otf") format("opentype");
         }
 
+        @font-face {
+            font-family: Noto Sans SC;
+            font-weight: 200;
+            src: url("font/Noto_Sans_SC/NotoSansSC-Thin.otf") format("opentype");
+        }
+
+        @font-face {
+            font-family: Noto Sans SC;
+            font-weight: 300;
+            src: url("font/Noto_Sans_SC/NotoSansSC-Light.otf") format("opentype");
+        }
+
         #capture {
             position: absolute;
-            left: 0;
-            top: 0;
+            left: 75px;
+            top: 75px;
             width: 400px;
             height: 900px;
+        }
+
+        @media only screen and (max-device-width: 600px) {
+            #capture {
+                left: 0;
+                top: 0;
+            }
         }
 
         #background-img {
@@ -83,7 +103,7 @@
             height: 43px;
             border: none;
             text-align: left;
-            
+
         }
 
         .two-line {
@@ -133,19 +153,19 @@
         .two-line-background {
             height: 55px;
             top: 7px;
-            width: 260px;
+            width: 257px;
         }
 
         .three-line-background {
             top: 7px;
             height:75px;
-            width: 260px;
+            width: 257px;
         }
 
         .four-line-background {
             top: 7px;
             height:95px;
-            width: 260px;
+            width: 257px;
         }
 
         .message-image {
@@ -182,15 +202,15 @@
             display: block;
         }
 
-        .msg-text {
+        .message-text {
             position: absolute;
-            left: 25px;
+            left: 18px;
             top: 14px;
             font-family: 'Noto Sans SC', sans-serif;
             font-size: 14px;
             /*font-size: medium;*/
             font-weight: bold;
-            max-width: 220px;
+            max-width: 224px;
         }
 
         #text-input {
@@ -238,17 +258,30 @@
             top: 910px;
         }
 
+        #fullscreen-button {
+            position: absolute;
+            left: 250px;
+            top: 910px;
+        }
+
         #control {
             position: absolute;
-            left: 500px;
+            left: 525px;
             top: 75px;
             /*position: absolute;*/
             /*top: 180px;*/
             /*left: 5px;*/
             width: 400px;
             border: none;
-            padding-top: 20px;
+            /*padding-top: 20px;*/
             /*height: 710px;*/
+        }
+
+        #help-menu {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            /*font-size: medium;*/
+            font-weight: normal;
         }
 
         .control-line {
@@ -313,7 +346,7 @@
             });
 
             // change line text class
-            lineElement.querySelectorAll(".msg-text").forEach((e) => {
+            lineElement.querySelectorAll(".message-text").forEach((e) => {
                 lineKeyWords.forEach((w) => {
                     if (lineKeyWord !== w) {
                         lineElement.classList.remove(w + "-line-text");
@@ -325,7 +358,7 @@
 
         function adjustLineLength(lineTextElem) {
             for (const bg of lineTextElem.parentElement.querySelectorAll(".width-adjustable")) {
-                bg.style.width = lineTextElem.clientWidth + "px";
+                bg.style.width = Math.max(0, lineTextElem.clientWidth - 8) + "px";
             }
 
             if (lineTextElem.dataset.previousHeight === undefined
@@ -354,11 +387,11 @@
             let oneLine = document.getElementById("canvas").appendChild(template.content.firstElementChild);
             readOriginalHeight(oneLine);
             if (text) {
-                oneLine.querySelectorAll(".msg-text").forEach((e) => {
+                oneLine.querySelectorAll(".message-text").forEach((e) => {
                     e.innerText = text;
                 })
             }
-            oneLine.querySelectorAll(".msg-text").forEach((e) => {
+            oneLine.querySelectorAll(".message-text").forEach((e) => {
                 adjustLineLength(e);
             })
         }
@@ -475,6 +508,20 @@
                     //
                 });
         }
+
+        function enterFullscreen() {
+            document.getElementById("capture").addEventListener("click", function (event) {
+                document.exitFullscreen();
+            })
+            document.getElementById("capture").requestFullscreen();
+        }
+        
+        function getVersion() {
+            return "v0.2";
+        }
+
+        document.title += " " + getVersion();
+
     </script>
     <script src="js/dom-to-image.min.js"></script>
 </head>
@@ -483,9 +530,8 @@
     <img id="background-img" src="image/background.png" alt=""/>
     <div id="canvas">
         <div id="message-time" contenteditable="true">
-            2020年6月7日 星期日 11 : 05
+            2020年6月9日 星期二 12 : 05
         </div>
-
         <!-- messages are inserted after here -->
 <!--        <div class="one-line message height-adjustable">-->
 <!--            <img class="one-line-background line-background  height-adjustable one-line-background-left"-->
@@ -494,22 +540,22 @@
 <!--                 src="image/1line-mid-1.png" alt=""/>-->
 <!--            <img class="one-line-background line-background  height-adjustable one-line-background-right"-->
 <!--                 src="image/1line-right-1.png" alt=""/>-->
-<!--            <div class="one-line-text height-adjustable msg-text" onload="adjustLineLength(this)"-->
-<!--                 onkeyup="adjustLineLength(this)" contenteditable="true">点击我来编辑-->
+<!--            <div class="one-line-text height-adjustable message-text" onload="adjustLineLength(this)"-->
+<!--                 onkeyup="adjustLineLength(this)" contenteditable="true" onclick="adjustLineLength(this)">点击我虽然最近每天都在吃纳豆，和-->
 <!--            </div>-->
 <!--        </div>-->
-<!--        <div class="two-line message">-->
+<!--        <div class="two-line message height-adjustable">-->
 <!--            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>-->
-<!--            <div class="two-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>-->
+<!--            <div class="two-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>-->
 <!--        </div>-->
-<!--        <div class="three-line message">-->
+<!--        <div class="three-line message height-adjustable">-->
 <!--            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>-->
-<!--            <div class="three-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+<!--            <div class="three-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
 <!--            </div>-->
 <!--        </div>-->
-<!--        <div class="four-line message">-->
-<!--            <img class="four-line-background line-background " src="image/3line-1.png" alt=""/>-->
-<!--            <div class="four-line-text msg-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+<!--        <div class="four-line message height-adjustable">-->
+<!--            <img class="four-line-background line-background " src="image/4line-1.png" alt=""/>-->
+<!--            <div class="four-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
 <!--                虽然最近每天都在吃纳豆-->
 <!--            </div>-->
 <!--        </div>-->
@@ -523,8 +569,24 @@
     <button id="enter-button" onclick="appendOneLineFromInput()"></button>
     <button id="image-button" onclick="appendImageLine()"></button>
 </div>
-<button id="save-button" onclick="saveImage()">√保存截图</button>
-<!--<div id="control">-->
+
+<div id="control">
+    <div id="help-menu">
+        <div style="text-align: center; font-weight: bold">来来喵LaiLaiMail <script>document.write(getVersion())</script></div>
+        <div>使用说明
+            <div>
+                <ol>
+                    <li>文字气泡：点击底部的chat...来输入文字。点击enter来完成输入。</li>
+                    <li>图片气泡：点击底部左边 📷 图标来添加图片。图片自动附带水印。</li>
+                    <li>删除气泡：点击气泡右上角的x来删除。</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="save-button" onclick="saveImage()">√保存截图</button>
+    <button id="fullscreen-button" onclick="enterFullscreen()">全屏显示</button>
 <!--    <div class="control-line">-->
 <!--        <button class="control-button" onclick="appendOneLine()">+文字气泡</button><button class="control-button" onclick="appendImageLine()">+图片气泡</button>-->
 <!--    </div>-->
@@ -533,7 +595,7 @@
 <!--    </div>-->
 <!--    <div id="log-area">-->
 <!--    </div>-->
-<!--</div>-->
+</div>
 <template id="one-line-template">
     <div class="one-line message height-adjustable" onclick="">
         <img class="one-line-background line-background height-adjustable one-line-background-left"
@@ -546,7 +608,7 @@
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
         <img class="remove-button" src="image/delete.png" alt="" onclick="removeLine(this)">
-        <div class="one-line-text height-adjustable msg-text">
+        <div class="one-line-text height-adjustable message-text">
             点击我来编辑
         </div>
     </div>

@@ -371,12 +371,20 @@
         let state;
         if (window.localStorage) {
             state = JSON.parse(window.localStorage.getItem("state"));
+            // failsafe
+            if (window.location.search) {
+                let params = (new URL(document.location)).searchParams;
+                if (params.get("resetState") !== undefined) {
+                    state = null;
+                }
+            }
         }
 
         if (!state) {
             state = {
                 helpMenu: true,
                 checkedVersion: "",
+                messageTime: "2020年6月9日 星期二 16 : 05",
                 messages: []// message: {type: "text|image", value: "text|dataUrl"}
             };
         }
@@ -468,7 +476,7 @@
                 appendOneLine(input.innerText);
                 input.innerText = "";
             }
-
+            saveMessages();
         }
 
         function removeLast() {
@@ -503,6 +511,7 @@
             var reader = new FileReader();
             reader.addEventListener("load", function(event2) {
                 appendImageLine2(event2.target.result);
+                saveMessages();
             });
             reader.readAsDataURL(file);
         }
@@ -520,12 +529,12 @@
             // On Mobile Safari, it only works if the element is appending to the document
             fileSelector.style.display = "none";
             document.body.appendChild(fileSelector);
-
             fileSelector.click();
         }
 
         function removeLine(elem) {
             elem.parentElement.remove();
+            saveMessages();
         }
 
         function dropHandler(event) {
@@ -607,6 +616,47 @@
             // elem.remove();
         }
 
+        function loadMessages() {
+            document.getElementById("message-time").innerText = state.messageTime;
+            if (state.messages && state.messages.length > 0) {
+                for (const elem of document.getElementById("canvas").querySelectorAll(".message")) {
+                    elem.remove();
+                }
+
+                for (const message of state.messages) {
+                    if (message.type === "text") {
+                        appendOneLine(message.value);
+                    }
+
+                    if (message.type === "image") {
+                        appendImageLine2(message.value);
+                    }
+                }
+            }
+        }
+
+        function saveMessages() {
+            state.messageTime = document.getElementById("message-time").innerText;
+            state.messages = [];
+            for (const elem of document.querySelectorAll(".message")) {
+                if (elem.classList.contains("message")) {
+                    if (elem.classList.contains("image-line")) {
+                        state.messages.push({
+                            type: "image",
+                            value: elem.querySelector(".message-image").src
+                        });
+                    } else {
+                        // text message
+                        state.messages.push({
+                            type: "text",
+                            value: elem.querySelector(".message-text").innerText
+                        });
+                    }
+                }
+            }
+            saveLocalState();
+        }
+
         // init
         document.addEventListener("DOMContentLoaded", function (event) {
             document.body.addEventListener("drop", function (event2) {
@@ -619,6 +669,8 @@
 
             // apply state
             closeHelp(state.checkedVersion === getNameVersion() && !state.helpMenu);
+            loadMessages();
+            saveMessages();
         });
     </script>
     <script src="js/dom-to-image.min.js"></script>
@@ -669,7 +721,8 @@
 <div id="capture">
     <img id="background-img" src="image/background.png" alt=""/>
     <div id="canvas">
-        <div id="message-time" contenteditable="true">
+        <div id="message-time" contenteditable="true"
+             onkeypress="saveMessages()" onkeydown="saveMessages()" onkeyup="saveMessages()">
             2020年6月9日 星期二 12 : 05
         </div>
         <!-- messages are inserted after here -->

@@ -375,7 +375,7 @@
             // failsafe
             if (window.location.search) {
                 let params = (new URL(document.location)).searchParams;
-                if (params.get("resetState") !== undefined) {
+                if (params.get("resetState") != null) {
                     state = null;
                 }
             }

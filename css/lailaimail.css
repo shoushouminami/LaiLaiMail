@@ -1,0 +1,371 @@
+@font-face {
+    font-family: Noto Sans SC;
+    src: url("../font/Noto_Sans_SC/NotoSansSC-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Noto Sans SC;
+    font-weight: bold;
+    src: url("../font/Noto_Sans_SC/NotoSansSC-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Noto Sans SC;
+    font-weight: 200;
+    src: url("../font/Noto_Sans_SC/NotoSansSC-Thin.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Noto Sans SC;
+    font-weight: 300;
+    src: url("../font/Noto_Sans_SC/NotoSansSC-Light.otf") format("opentype");
+}
+
+#center-wrap {
+    margin: auto;
+    position: relative;
+    width: 400px;
+    height: 900px;
+}
+
+#capture {
+    /*margin: auto;*/
+    position: relative;
+    /*left: 75px;*/
+    /*top: 75px;*/
+    width: 400px;
+    height: 900px;
+}
+
+#background-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 400px;
+    z-index: -100;
+}
+
+#message-canvas {
+    position: absolute;
+    left: 10px;
+    top: 120px;
+    /*position: absolute;*/
+    /*top: 180px;*/
+    /*left: 5px;*/
+    width: 390px;
+    max-height: 705px;
+    border: none;
+    /*padding-top: 120px;*/
+    /*height: 710px;*/
+    overflow: auto;
+    overflow-y:visible;
+}
+
+#message-time {
+    /*position: absolute;*/
+    height: 60px;
+    text-align: center;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: smaller;
+    font-weight: normal;
+    color: #b3b3b3;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+.message {
+    position: relative;
+    display: block;
+    border: none;
+    text-align: left;
+    width: 300px;
+    line-height: 20px;
+}
+
+.one-line {
+    height: 43px;
+    border: none;
+    text-align: left;
+
+}
+
+/*
+Used in JS
+ */
+.two-line {
+    height: 63px;
+    border: none;
+    text-align: left;
+}
+
+/*
+Used in JS
+ */
+.three-line {
+    height: 83px;
+    text-align: left;
+}
+
+/*
+Used in JS
+ */
+.four-line {
+    height: 103px;
+    text-align: left;
+}
+
+.image-line {
+    padding-top: 8px;
+    /*padding-bottom: 8px;*/
+}
+
+.line-background {
+    position: relative;
+    border: none;
+    border-image-width: 0;
+    margin: unset;
+    padding: unset;
+    z-index: -50;
+    float: left;
+}
+
+.one-line-background {
+    height: 35px;
+    top: 7px;
+}
+
+.one-line-background-left {
+    width: 24px;
+}
+
+.one-line-background-right {
+    width: 20px;
+}
+
+.two-line-background {
+    height: 55px;
+    top: 7px;
+    width: 257px;
+}
+
+.three-line-background {
+    top: 7px;
+    height:75px;
+    width: 257px;
+}
+
+.four-line-background {
+    top: 7px;
+    height:95px;
+    width: 257px;
+}
+
+.message-image {
+    width: 260px;
+    border-radius: 25px;
+}
+
+.water-mark {
+    position: absolute;
+    right: 55px;
+    bottom: 15px;
+    height: 50px;
+    opacity: 0.6;
+    z-index: 100;
+}
+
+.remove-button {
+    position: absolute;
+    right: 30px;
+    top: 0;
+    height: 35px;
+    width: 35px;
+    display: none;
+    z-index: 100;
+}
+
+.one-line .remove-button {
+    position: relative;
+    right: 20px;
+    top: -3px;
+}
+
+.message:hover .remove-button, .message:focus .remove-button, .message:active .remove-button{
+    display: block;
+}
+
+.message-text {
+    position: absolute;
+    left: 18px;
+    top: 14px;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    /*font-size: medium;*/
+    font-weight: bold;
+    max-width: 224px;
+}
+
+#text-input {
+    position: absolute;
+    bottom: 33px;
+    left: 95px;
+    width: 220px;
+    max-width: 220px;
+    border: none;
+    outline: 0 solid transparent;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#text-input:not(:empty){
+    background-color: white;
+}
+
+#enter-button {
+    position: absolute;
+    bottom: 25px;
+    right: 15px;
+    width: 50px;
+    height: 35px;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+#image-button {
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    width: 50px;
+    height: 35px;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+/*control buttons */
+#save-button {
+    margin: auto;
+    position: static;
+    display: block;
+    background: transparent;
+    border: solid gray 1px;
+    /*border*/
+    outline: none;
+    padding-top: 5px;
+    height: 60px;
+    width: 380px;
+    border-radius: 4px;
+    /*left: 500px;*/
+    /*top: 910px;*/
+}
+
+#save-button > img {
+    width: 45px;
+    height: 45px;
+}
+
+#save-button > div {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid black;
+    width: 25px;
+    height: 25px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#fullscreen-button {
+    position: absolute;
+    left: 250px;
+    top: 910px;
+}
+
+.desktop-only {
+}
+
+.mobile-only {
+    /*display: none;*/
+}
+
+@media only screen and (max-device-width: 600px) {
+    .desktop-only {
+        display: none;
+    }
+    .mobile-only {
+        display: block;
+    }
+}
+
+#control {
+    margin: auto;
+    position: static;
+    /*left: 525px;*/
+    /*top: 75px;*/
+    /*position: absolute;*/
+    /*top: 180px;*/
+    /*left: 5px;*/
+    width: 400px;
+    border: none;
+    padding-bottom: 10px;
+    /*height: 400px;*/
+}
+
+#help-menu {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 14px;
+    /*font-size: medium;*/
+    font-weight: normal;
+}
+
+#close-help-menu {
+    position: relative;
+}
+
+#close-help-menu > div {
+    margin: auto;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    width: 50px;
+}
+
+#hide-close-help {
+    position: absolute;
+    right: 1px;
+    top: 0;
+}
+
+.control-line {
+    position: relative;
+    border: none;
+    background: none;
+    height: 50px;
+}
+
+.control-button {
+    position: static;
+    margin-left: 10px;
+    left: 5px;
+    top: 10px;
+    height: 40px;
+    width: 100px;
+}
+
+.control-button:active {
+}
+
+.disabled {
+    display: none;
+}

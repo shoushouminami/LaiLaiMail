@@ -266,13 +266,14 @@
             border: none;
             outline: none;
             padding-top: 15px;
-            height: 50px;
+            height: 60px;
             /*left: 500px;*/
             /*top: 910px;*/
         }
 
         #save-button > img {
             width: 45px;
+            height: 45px;
         }
 
         #fullscreen-button {
@@ -285,7 +286,7 @@
         }
 
         .mobile-only {
-            display: none;
+            /*display: none;*/
         }
 
         @media only screen and (max-device-width: 600px) {
@@ -613,7 +614,8 @@
         function hideCloseHelp(elem) {
             // closeHelp(true);
             document.getElementById("control").classList.add("disabled")
-            // elem.remove();
+            document.getElementById("save-button").remove();
+            document.querySelector("#save-button img").remove();
         }
 
         function loadMessages() {
@@ -686,14 +688,14 @@
                     <li>图片气泡：点击底部左边 📷 图标来添加图片。图片自动附带水印。</li>
                     <li>删除气泡：点击气泡右上角的x来删除。</li>
                     <li>编辑时间戳：点击来来头像下方的日期来编辑时间日期。</li>
-                    <li>保存图片：<span class="desktop-only">点击最下方的<img src="image/download.png" style="width: 14px" alt="">图标来保存。</span>该功能仅支持电脑端Chrome浏览器（Windows/Mac）</li>
+                    <li>保存图片：点击最下方的<img src="image/download.png" style="width: 14px" alt="">图标来保存。该功能仅支持Chrome浏览器（Windows/Mac/安卓）</li>
                 </ul>
             </div>
         </div>
         <div>注意事项
             <div>
                 <ul>
-                    <li><script>document.write(getNameVersion())</script>仅在电脑端Chrome浏览器（Windows/Mac）下测试过。其他浏览器可能无法使用。</li>
+                    <li><script>document.write(getNameVersion())</script>仅在hrome浏览器（Windows/Mac/安卓）下测试过。其他浏览器可能无法使用。</li>
                     <li>如有问题反馈，可以在<a href="https://docs.qq.com/form/edit/DUk9PVWpGZ3JXY0lo">这里</a>提交，谢谢！</li>
                 </ul>
             </div>
@@ -762,7 +764,7 @@
     <button id="enter-button" onclick="appendOneLineFromInput()"></button>
     <button id="image-button" onclick="appendImageLine()"></button>
 </div>
-<button class="desktop-only" id="save-button" onclick="saveImage()"><img class="desktop-only" src="image/download.png" alt="点击下载图片"></button>
+<button id="save-button" onclick="saveImage()"><img src="image/download.png" alt="点击下载图片"></button>
 <!--    <button id="fullscreen-button" onclick="enterFullscreen()">全屏显示</button>-->
 <template id="one-line-template">
     <div class="one-line message height-adjustable" onclick="">

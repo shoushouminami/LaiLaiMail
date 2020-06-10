@@ -35,25 +35,21 @@
             src: url("font/Noto_Sans_SC/NotoSansSC-Light.otf") format("opentype");
         }
 
-        #capture {
+        #center-wrap {
             margin: auto;
+            position: relative;
+            width: 400px;
+            height: 900px;
+        }
+
+        #capture {
+            /*margin: auto;*/
             position: relative;
             /*left: 75px;*/
             /*top: 75px;*/
             width: 400px;
             height: 900px;
         }
-
-        /*@media only screen and (max-device-width: 600px) {*/
-        /*    #control {*/
-        /*        display: none;*/
-        /*    }*/
-
-        /*    #capture {*/
-        /*        left: 0;*/
-        /*        top: 0;*/
-        /*    }*/
-        /*}*/
 
         #background-img {
             position: absolute;
@@ -91,10 +87,6 @@
             padding-top: 20px;
         }
 
-        #new-message {
-
-        }
-
         .message {
             position: relative;
             display: block;
@@ -111,17 +103,26 @@
 
         }
 
+        /*
+        Used in JS
+         */
         .two-line {
             height: 63px;
             border: none;
             text-align: left;
         }
 
+        /*
+        Used in JS
+         */
         .three-line {
             height: 83px;
             text-align: left;
         }
 
+        /*
+        Used in JS
+         */
         .four-line {
             height: 103px;
             text-align: left;
@@ -263,10 +264,13 @@
             position: static;
             display: block;
             background: transparent;
-            border: none;
+            border: solid gray 1px;
+            /*border*/
             outline: none;
-            padding-top: 15px;
+            padding-top: 5px;
             height: 60px;
+            width: 380px;
+            border-radius: 4px;
             /*left: 500px;*/
             /*top: 910px;*/
         }
@@ -274,6 +278,26 @@
         #save-button > img {
             width: 45px;
             height: 45px;
+        }
+
+        #save-button > div {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 5px solid black;
+            width: 25px;
+            height: 25px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         #fullscreen-button {
@@ -552,13 +576,18 @@
         }
 
         function saveImage() {
+            let saveButton = document.getElementById("save-button");
+            saveButton.setAttribute("disabled", "disabled");
+            saveButton.firstElementChild.classList.add("disabled");
+            saveButton.lastElementChild.classList.remove("disabled");
+
             let options = {
-                style: {
-                    left: '0',
-                    right: '0',
-                    bottom: '0',
-                    top: '0'
-                }
+                // style: {
+                //     left: '0',
+                //     right: '0',
+                //     bottom: '0',
+                //     top: '0'
+                // }
             };
             domtoimage.toPng(document.querySelector("#capture"), options)
                 .then(function (dataUrl) {
@@ -571,7 +600,9 @@
                     // document.body.appendChild(link);
                     link.click();
                     // document.body.removeChild(link);
-                    //
+                    saveButton.lastElementChild.classList.add("disabled");
+                    saveButton.firstElementChild.classList.remove("disabled");
+                    saveButton.removeAttribute("disabled");
                 });
         }
 
@@ -720,51 +751,56 @@
     <!--    <div id="log-area">-->
     <!--    </div>-->
 </div>
-<div id="capture">
-    <img id="background-img" src="image/background.png" alt=""/>
-    <div id="canvas">
-        <div id="message-time" contenteditable="true"
-             onkeypress="saveMessages()" onkeydown="saveMessages()" onkeyup="saveMessages()">
-            2020年6月9日 星期二 12 : 05
+<div id="center-wrap">
+    <div id="capture">
+        <img id="background-img" src="image/background.png" alt=""/>
+        <div id="canvas">
+            <div id="message-time" contenteditable="true"
+                 onkeypress="saveMessages()" onkeydown="saveMessages()" onkeyup="saveMessages()">
+                2020年6月9日 星期二 12 : 05
+            </div>
+            <!-- messages are inserted after here -->
+            <!--        <div class="one-line message height-adjustable">-->
+            <!--            <img class="one-line-background line-background  height-adjustable one-line-background-left"-->
+            <!--                 src="image/1line-left-1.png" alt=""/>-->
+            <!--            <img class="one-line-background line-background  width-adjustable height-adjustable"-->
+            <!--                 src="image/1line-mid-1.png" alt=""/>-->
+            <!--            <img class="one-line-background line-background  height-adjustable one-line-background-right"-->
+            <!--                 src="image/1line-right-1.png" alt=""/>-->
+            <!--            <div class="one-line-text height-adjustable message-text" onload="adjustLineLength(this)"-->
+            <!--                 onkeyup="adjustLineLength(this)" contenteditable="true" onclick="adjustLineLength(this)">点击我虽然最近每天都在吃纳豆，和-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--        <div class="two-line message height-adjustable">-->
+            <!--            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>-->
+            <!--            <div class="two-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>-->
+            <!--        </div>-->
+            <!--        <div class="three-line message height-adjustable">-->
+            <!--            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>-->
+            <!--            <div class="three-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <!--        <div class="four-line message height-adjustable">-->
+            <!--            <img class="four-line-background line-background " src="image/4line-1.png" alt=""/>-->
+            <!--            <div class="four-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
+            <!--                虽然最近每天都在吃纳豆-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <div class="image-line message" onclick="">
+                <img class="remove-button" onclick="removeLine(this)" src="image/delete.png" alt="">
+                <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
+                <img class="water-mark" src="image/logo.png" alt="">
+            </div>
         </div>
-        <!-- messages are inserted after here -->
-<!--        <div class="one-line message height-adjustable">-->
-<!--            <img class="one-line-background line-background  height-adjustable one-line-background-left"-->
-<!--                 src="image/1line-left-1.png" alt=""/>-->
-<!--            <img class="one-line-background line-background  width-adjustable height-adjustable"-->
-<!--                 src="image/1line-mid-1.png" alt=""/>-->
-<!--            <img class="one-line-background line-background  height-adjustable one-line-background-right"-->
-<!--                 src="image/1line-right-1.png" alt=""/>-->
-<!--            <div class="one-line-text height-adjustable message-text" onload="adjustLineLength(this)"-->
-<!--                 onkeyup="adjustLineLength(this)" contenteditable="true" onclick="adjustLineLength(this)">点击我虽然最近每天都在吃纳豆，和-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="two-line message height-adjustable">-->
-<!--            <img class="two-line-background line-background " src="image/2line-1.png" alt=""/>-->
-<!--            <div class="two-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢</div>-->
-<!--        </div>-->
-<!--        <div class="three-line message height-adjustable">-->
-<!--            <img class="three-line-background line-background " src="image/3line-1.png" alt=""/>-->
-<!--            <div class="three-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="four-line message height-adjustable">-->
-<!--            <img class="four-line-background line-background " src="image/4line-1.png" alt=""/>-->
-<!--            <div class="four-line-text message-text" contenteditable="true">虽然最近每天都在吃纳豆，和什么搭配比较好呢? 虽然最近每天都在吃纳豆，和什么搭配比较好呢-->
-<!--                虽然最近每天都在吃纳豆-->
-<!--            </div>-->
-<!--        </div>-->
-        <div class="image-line message" onclick="">
-            <img class="remove-button" onclick="removeLine(this)" src="image/delete.png" alt="">
-            <img class="message-image" src="image/4AE2B1E04614810FBC1E5D2F74B0426B.jpg" alt=""/>
-            <img class="water-mark" src="image/logo.png">
-        </div>
+        <div id="text-input" contenteditable="true" data-text="chat..."></div>
+        <button id="enter-button" onclick="appendOneLineFromInput()"></button>
+        <button id="image-button" onclick="appendImageLine()"></button>
     </div>
-    <div id="text-input" contenteditable="true" data-text="chat..."></div>
-    <button id="enter-button" onclick="appendOneLineFromInput()"></button>
-    <button id="image-button" onclick="appendImageLine()"></button>
 </div>
-<button id="save-button" onclick="saveImage()"><img src="image/download.png" alt="点击下载图片"></button>
+<button id="save-button" onclick="saveImage()">
+    <img src="image/download.png" alt="点击下载图片">
+    <div class="loader disabled"></div>
+</button>
 <!--    <button id="fullscreen-button" onclick="enterFullscreen()">全屏显示</button>-->
 <template id="one-line-template">
     <div class="one-line message height-adjustable" onclick="">

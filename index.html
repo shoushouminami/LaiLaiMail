@@ -751,7 +751,7 @@
     <!--    <div id="log-area">-->
     <!--    </div>-->
 </div>
-<div id="center-wrap">
+<div id="center-wrap" onclick="">
     <div id="capture">
         <img id="background-img" src="image/background.png" alt=""/>
         <div id="canvas">
@@ -814,7 +814,13 @@
         <img class="three-line-background line-background disabled" src="image/3line-1.png" alt=""/>
         <img class="four-line-background line-background disabled" src="image/4line-1.png" alt=""/>
         <img class="remove-button" src="image/delete.png" alt="" onclick="removeLine(this)">
-        <div class="one-line-text height-adjustable message-text">
+        <div class="one-line-text height-adjustable message-text"
+             onkeypress="adjustLineLength(this)"
+             onkeydown="adjustLineLength(this)"
+             onkeyup="adjustLineLength(this)"
+             onfocus="adjustLineLength(this)"
+             onfocusout="adjustLineLength(this)"
+             contenteditable="true">
             点击我来编辑
         </div>
     </div>

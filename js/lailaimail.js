@@ -181,103 +181,85 @@ function dropHandler(event) {
     }
 }
 
-function saveImage() {
+function toggleDownloadButton(enable) {
     let saveButton = document.getElementById("save-button");
-    saveButton.setAttribute("disabled", "disabled");
-    saveButton.firstElementChild.classList.add("disabled");
-    saveButton.lastElementChild.classList.remove("disabled");
+    if (enable) {
+        // enable download button
+        saveButton.lastElementChild.classList.add("disabled");
+        saveButton.firstElementChild.classList.remove("disabled");
+        saveButton.removeAttribute("disabled");
+        // document.body.removeChild(link);
+    } else {
+        saveButton.setAttribute("disabled", "disabled");
+        saveButton.firstElementChild.classList.add("disabled");
+        saveButton.lastElementChild.classList.remove("disabled");
+    }
+}
 
-    let options = {
-        // style: {
-        //     left: '0',
-        //     right: '0',
-        //     bottom: '0',
-        //     top: '0'
-        // }
-    };
-    domtoimage.toPng(document.querySelector("#capture"), options)
-        .then(function (dataUrl) {
-            // var img = new Image();
-            // img.src = dataUrl;
-            // document.getElementById("draw").appendChild(img);
-            let link = document.createElement("a");
-            link.download = "mail-" + document.getElementById("message-time").innerText + ".png";
-            link.href = dataUrl;
-            // document.body.appendChild(link);
-            link.click();
-            // document.body.removeChild(link);
-            saveButton.lastElementChild.classList.add("disabled");
-            saveButton.firstElementChild.classList.remove("disabled");
-            saveButton.removeAttribute("disabled");
-        });
+function saveImage() {
+    // disable download button
+    toggleDownloadButton(false);
 
-    // domtoimage.toJpeg(document.getElementById("capture"), { quality: 0.95 })
-    //     .then(function (dataUrl) {
-    //         // var img = new Image();
-    //         // img.src = dataUrl;
-    //         // document.getElementById("draw").appendChild(img);
-    //         let link = document.createElement("a");
-    //         link.download = "mail-" + document.getElementById("message-time").innerText + ".jpg";
-    //         link.href = dataUrl;
-    //         // document.body.appendChild(link);
-    //         link.click();
-    //         // document.body.removeChild(link);
-    //         saveButton.lastElementChild.classList.add("disabled");
-    //         saveButton.firstElementChild.classList.remove("disabled");
-    //         saveButton.removeAttribute("disabled");
-    //     });
+    // draw
+    let canvas = draw();
+    let dataUrl = canvas.toDataURL("image/jpeg", 1);
+    let link = document.createElement("a");
+    link.download = "mail-" + document.getElementById("message-time").innerText + ".jpg";
+    link.href = dataUrl;
+    link.click();
 
-    // html2canvas(document.getElementById("capture")).then(function(canvas) {
-    //     document.body.appendChild(canvas);
-    //     saveButton.lastElementChild.classList.add("disabled");
-    //     saveButton.firstElementChild.classList.remove("disabled");
-    //     saveButton.removeAttribute("disabled");
-    // });
+    toggleDownloadButton(true);
+
 }
 
 function draw() {
-    let canvas = document.getElementById("canvas");
+    // let canvas = document.getElementById("canvas");
+    let canvas = document.createElement("canvas");
+    let scale = 2;
+    canvas.width = 400 * scale;
+    canvas.height = 900 * scale;
     let context = canvas.getContext("2d");
+    context.scale(scale, scale);
     context.moveTo(0, 0);
 
     // bg
-    context.mozImageSmoothingEnabled = false;
-    context.webkitImageSmoothingEnabled = false;
-    context.msImageSmoothingEnabled = false;
-    context.imageSmoothingEnabled = false;
+    // context.mozImageSmoothingEnabled = false;
+    // context.webkitImageSmoothingEnabled = false;
+    // context.msImageSmoothingEnabled = false;
+    // context.imageSmoothingEnabled = false;
     context.drawImage(document.getElementById("background-img"), 0, 0, 400, 900);
 
-    // ctx.moveTo(10, 140);
+    // draw message timestamp
     context.font = "14px 'Noto Sans SC', sans-serif";
     context.textAlign = "center";
     context.fillStyle = "#b3b3b3";
+    context.textBaseline = "ideographic";
     context.fillText(document.getElementById("message-time").innerText, 200, 160, 400)
 
-    let y = 200
+    // draw messages
+    let y = 180
     let x = 10;
     for (const elem of document.querySelectorAll(".message")) {
         if (elem.classList.contains("image-line")) {
-            // state.messages.push({
-            //     type: "image",
-            //     value: elem.querySelector(".message-image").src
-            // });
             // draw image
             let img = elem.querySelector(".message-image");
             let watermark = elem.querySelector(".water-mark");
             if (img) {
                 // .image-line padding-top: 8px
-                context.drawImage(drawImageWithRoundCorner(img, 25, 1), x, y + 8, img.width, img.height);
-                context.drawImage(drawImageWithRoundCorner(watermark, 25, window.getComputedStyle(watermark).getPropertyValue("opacity")), x + img.width - watermark.width - 10, y + 8 + img.height - watermark.height - 10, watermark.width, watermark.height);
+                // context.save();
+                // context.setTransform(1, 0, 0, 1, 0, 0);  // reset scale as drawImageWithRoundCorner takes scale
+                context.drawImage(drawImageWithRoundCorner(img, 25, 1, scale), x, y + 8, img.width, img.height);
+                if (watermark) {
+                    context.drawImage(drawImageWithRoundCorner(watermark, 25, window.getComputedStyle(watermark).getPropertyValue("opacity"), scale), x + img.width - watermark.width - 10, y + 8 + img.height - watermark.height - 10, watermark.width, watermark.height);
+                }
+                // context.restore();
             }
-
-            y += elem.clientHeight;
         } else {
             // text message
-            let text = elem.querySelector(".message-text").innerText;
-            let x = 10;
-            y += 7;// x-line-background top: 7px;
+            x = 10;
+            // draw background bubble
             for (const bg of elem.querySelectorAll("img.line-background:not(.disabled)")) {
-                context.drawImage(bg, x, y, bg.width, bg.height);
+                context.drawImage(bg, x, y + 7, bg.width, bg.height); // x-line-background top: 7px;
                 x += bg.width;
             }
 
@@ -288,59 +270,65 @@ function draw() {
             // context.fontWeight = "bold";
             // context.fillText(text, x + 18, y + 14, 400);
             let textElem = elem.querySelector(".message-text");
-            context.drawImage(drawText(textElem, 20), x + 10, y, textElem.width, textElem.height);
-            y += elem.clientHeight - 7;
+            if (textElem) {
+                // left: 18px; top: 14px;
+                context.drawImage(drawText(textElem, 20, scale), x + 18, y + 14, textElem.clientWidth, textElem.clientHeight);
+            }
         }
-
+        //
+        y += elem.clientHeight;
     }
+
+    return canvas;
 }
 
-function drawImageWithRoundCorner(img, radius, opacity) {
-    let scratchCanvas = document.createElement('canvas');
-    scratchCanvas.width = img.width;
-    scratchCanvas.height = img.height;
+function drawImageWithRoundCorner(img, radius, opacity = 1, scale = 1) {
+    let canvas = document.createElement('canvas');
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
 
-    let scratchCtx = scratchCanvas.getContext('2d');
-    scratchCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
-    scratchCtx.globalCompositeOperation = 'source-over'; //default
-    scratchCtx.fillStyle = "rgba(255, 255, 255," + opacity + ")"; //color doesn't matter, but we want full opacity
-    scratchCtx.drawImage(img, 0, 0, img.width, img.height);
+    let context = canvas.getContext('2d');
+    context.scale(scale, scale);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.globalCompositeOperation = 'source-over'; //default
+    context.fillStyle = "rgba(255, 255, 255," + opacity + ")"; //color doesn't matter, but we want full opacity
+    context.drawImage(img, 0, 0, img.width, img.height);
 
-    scratchCtx.globalCompositeOperation = 'destination-in';
-    scratchCtx.beginPath();
+    context.globalCompositeOperation = 'destination-in';
+    context.beginPath();
 
-    scratchCtx.arc(radius, radius, radius, Math.PI, 1.5 * Math.PI);
-    scratchCtx.lineTo(img.width - radius, 0);
-    scratchCtx.arc(img.width - radius, radius, radius, 1.5 * Math.PI, 2 * Math.PI);
-    scratchCtx.lineTo(img.width, img.height - radius);
-    scratchCtx.arc(img.width - radius, img.height - radius, radius, 0, 0.5 * Math.PI);
-    scratchCtx.lineTo(radius, img.height);
-    scratchCtx.arc(radius, img.height - radius, radius, 0.5 * Math.PI, Math.PI);
-    scratchCtx.closePath();
-    scratchCtx.fill();
-    return scratchCanvas;
+    context.arc(radius, radius, radius, Math.PI, 1.5 * Math.PI);
+    context.lineTo(img.width - radius, 0);
+    context.arc(img.width - radius, radius, radius, 1.5 * Math.PI, 2 * Math.PI);
+    context.lineTo(img.width, img.height - radius);
+    context.arc(img.width - radius, img.height - radius, radius, 0, 0.5 * Math.PI);
+    context.lineTo(radius, img.height);
+    context.arc(radius, img.height - radius, radius, 0.5 * Math.PI, Math.PI);
+    context.closePath();
+    context.fill();
+    return canvas;
 }
 
-function drawText(elem, singleLineHeight) {
+function drawText(elem, singleLineHeight, scale = 1) {
     let canvas = document.createElement('canvas');
     let lineWidth = elem.clientWidth;
-    canvas.width = elem.clientWidth;
-    canvas.height = elem.clientHeight;
+    canvas.width = elem.clientWidth * scale;
+    canvas.height = elem.clientHeight * scale;
     let context = canvas.getContext('2d');
+    context.scale(scale, scale);
     let css = window.getComputedStyle(elem);
 
-    context.globalCompositeOperation = 'source-over';
     context.font = css.fontWeight + " " + css.fontSize + " " + css.fontFamily;
     context.fillStyle = css.color;
     context.textBaseline = "ideographic";
     let y = singleLineHeight;
     for (const text of elem.innerText.split("\n")) {
-        if (context.measureText(text).width > lineWidth) {
+        if (Math.floor(context.measureText(text).width) > lineWidth) {
             let start = 0;
             let sub = "";
             for (let i = 0; i <= text.length; i++) {
                 let nextSub = text.substring(start, i);
-                if (context.measureText(nextSub).width > lineWidth) {
+                if (Math.floor(context.measureText(nextSub).width) > lineWidth) {
                     // write sub
                     context.fillText(sub, 0, y);
                     y += singleLineHeight;
@@ -359,7 +347,7 @@ function drawText(elem, singleLineHeight) {
             y += singleLineHeight;
         }
     }
-    document.body.appendChild(canvas);
+    // document.body.appendChild(canvas);
     return canvas;
 }
 
@@ -371,7 +359,7 @@ function enterFullscreen() {
 }
 
 function getNameVersion() {
-    return "来来喵LaiLaiMail v0.2";
+    return "来来喵LaiLaiMail v0.4";
 }
 
 document.title = getNameVersion();
@@ -488,7 +476,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     ]).then(function () {
         loadMessages();
         saveMessages();
-        draw();
     });
 });
 

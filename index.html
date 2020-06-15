@@ -11,10 +11,8 @@
     />
     <meta charset="UTF-8">
     <title>来来喵LaiLaiMail </title>
-    <link rel="stylesheet" href="css/lailaimail.css?v=0">
-    <script src="js/lailaimail.js?v=0"></script>
-    <script src="js/dom-to-image.min.js"></script>
-    <script src="js/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="css/lailaimail.css?v=0.4">
+    <script src="js/lailaimail.js?v=0.4"></script>
 </head>
 <body>
 <div id="control">
@@ -61,7 +59,7 @@
 </div>
 <div id="center-wrap" onclick="">
     <div id="capture">
-        <img id="background-img" src="image/background_mid.png" alt=""/>
+        <img id="background-img" src="image/background.jpg" alt=""/>
         <div id="message-canvas">
             <div id="message-time" contenteditable="true"
                  onkeypress="saveMessages()" onkeydown="saveMessages()" onkeyup="saveMessages()">
@@ -140,8 +138,6 @@
         <img class="message-image" src="" alt=""/>
     </div>
 </template>
-<canvas id="canvas" width="400" height="900">
-
 </canvas>
 </body>
 </html>

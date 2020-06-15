@@ -310,7 +310,7 @@ Used in JS
 
 #control {
     margin: auto;
-    position: static;
+    position: relative;
     /*left: 525px;*/
     /*top: 75px;*/
     /*position: absolute;*/
@@ -320,17 +320,20 @@ Used in JS
     border: none;
     padding-bottom: 10px;
     /*height: 400px;*/
-}
 
-#help-menu {
     font-family: 'Noto Sans SC', sans-serif;
     font-size: 14px;
     /*font-size: medium;*/
     font-weight: normal;
 }
 
+#help-menu {
+}
+
 #close-help-menu {
-    position: relative;
+    position: absolute;
+    right: 10px;
+    top: 0;
 }
 
 #close-help-menu > div {

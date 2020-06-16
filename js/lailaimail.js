@@ -204,7 +204,7 @@ function saveImage() {
     let canvas = draw();
     let dataUrl = canvas.toDataURL("image/jpeg", 1);
     let link = document.createElement("a");
-    link.download = "mail-" + document.getElementById("message-time").innerText + ".jpg";
+    link.download = "lailaimail-" + document.getElementById("message-time").innerText + ".jpg";
     link.href = dataUrl;
     link.click();
 
@@ -230,7 +230,7 @@ function draw() {
     context.drawImage(document.getElementById("background-img"), 0, 0, 400, 900);
 
     // draw message timestamp
-    context.font = "14px 'Noto Sans SC', sans-serif";
+    context.font = "13px 'Noto Sans SC', sans-serif";
     context.textAlign = "center";
     context.fillStyle = "#b3b3b3";
     context.textBaseline = "ideographic";
@@ -358,8 +358,12 @@ function enterFullscreen() {
     document.getElementById("capture").requestFullscreen();
 }
 
+function getVersion() {
+    return "v0.4";
+}
+
 function getNameVersion() {
-    return "来来喵LaiLaiMail v0.4";
+    return "来来喵LaiLaiMail " + getVersion();
 }
 
 document.title = getNameVersion();

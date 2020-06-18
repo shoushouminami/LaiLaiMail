@@ -99,6 +99,8 @@ function appendOneLine(text) {
     oneLine.querySelectorAll(".message-text").forEach((e) => {
         adjustLineLength(e);
     })
+
+    adjustCanvasHeight();
 }
 
 function appendOneLineFromInput() {
@@ -108,6 +110,40 @@ function appendOneLineFromInput() {
         input.innerText = "";
     }
     saveMessages();
+}
+
+// adjust background height and message-canvas height if messages grow too long
+function adjustCanvasHeight() {
+    let messageCanvas = document.getElementById("message-canvas");
+    let canvasCss = window.getComputedStyle(messageCanvas);
+    // might be missing if we haven't extended any element
+    let extendElem = document.querySelector("#background > ." + BACKGROUND_EXTENSION_CLASS_NAME);
+    let extendedElemHeight = 111;
+    if (extendElem) {
+        extendedElemHeight = parseInt(window.getComputedStyle(extendElem).height);
+    }
+
+    // input area height = 67
+    let inputAreaHeight = document.getElementById("background").lastElementChild.clientHeight;
+    let canvasHeight = messageCanvas.scrollHeight + parseInt(canvasCss.top) + inputAreaHeight;
+    // 10 for extra buffer
+    if (canvasHeight + 10 > messageCanvas.parentElement.scrollHeight) {
+        extendBackground();
+        setTimeout(adjustCanvasHeight, 10);
+    } else if (canvasHeight + 10 + extendedElemHeight < messageCanvas.parentElement.scrollHeight) { // extension height = 111px
+        if (shrinkBackground()) {
+            setTimeout(adjustCanvasHeight, 10);
+        }
+    }
+
+    // let childrenHeight = 0;
+    // for (const child of messageCanvas.children) {
+    //     childrenHeight += child.clientHeight;
+    // }
+    //
+    // if (childrenHeight + 50 > messageCanvas.clientHeight) {
+    //
+    // }
 }
 
 function removeLast() {
@@ -136,6 +172,7 @@ function appendImageLine2(path) {
     template.innerHTML = document.getElementById("image-line-template").innerHTML;
     let oneLine = document.getElementById("message-canvas").appendChild(template.content.firstElementChild);
     oneLine.lastElementChild.setAttribute("src", path);
+    adjustCanvasHeight();
 }
 
 function appendImageFromFile(file) {
@@ -166,6 +203,7 @@ function appendImageLine() {
 function removeLine(elem) {
     elem.parentElement.remove();
     saveMessages();
+    adjustCanvasHeight();
 }
 
 function dropHandler(event) {
@@ -213,11 +251,11 @@ function saveImage() {
 }
 
 function draw() {
-    // let canvas = document.getElementById("canvas");
+    let capture = document.getElementById("capture");
     let canvas = document.createElement("canvas");
     let scale = 2;
-    canvas.width = 400 * scale;
-    canvas.height = 900 * scale;
+    canvas.width = capture.clientWidth * scale;
+    canvas.height = capture.clientHeight * scale;
     let context = canvas.getContext("2d");
     context.scale(scale, scale);
     context.moveTo(0, 0);
@@ -227,7 +265,11 @@ function draw() {
     // context.webkitImageSmoothingEnabled = false;
     // context.msImageSmoothingEnabled = false;
     // context.imageSmoothingEnabled = false;
-    context.drawImage(document.getElementById("background-img"), 0, 0, 400, 900);
+    let y = 0;
+    for (const elem of document.querySelectorAll("#background > img")) {
+        context.drawImage(elem, 0, y, elem.clientWidth, elem.clientHeight);
+        y += elem.clientHeight;
+    }
 
     // draw message timestamp
     context.font = "13px 'Noto Sans SC', sans-serif";
@@ -237,7 +279,7 @@ function draw() {
     context.fillText(document.getElementById("message-time").innerText, 200, 160, 400)
 
     // draw messages
-    let y = 180
+    y = 180;
     let x = 10;
     for (const elem of document.querySelectorAll(".message")) {
         if (elem.classList.contains("image-line")) {
@@ -351,11 +393,23 @@ function drawText(elem, singleLineHeight, scale = 1) {
     return canvas;
 }
 
-function enterFullscreen() {
-    document.getElementById("capture").addEventListener("click", function (event) {
-        document.exitFullscreen();
-    })
-    document.getElementById("capture").requestFullscreen();
+const BACKGROUND_EXTENSION_CLASS_NAME = "extended";
+function extendBackground() {
+    let background = document.getElementById("background");
+    let img = document.createElement("img");
+    img.src = "image/background-extend.jpg";
+    img.classList.add(BACKGROUND_EXTENSION_CLASS_NAME);
+    background.insertBefore(img, background.lastElementChild);
+}
+
+// returns if any element was removed
+function shrinkBackground() {
+    let img = document.querySelector("#background > ." + BACKGROUND_EXTENSION_CLASS_NAME);
+    if (img) {
+        img.remove();
+        return true;
+    }
+    return false;
 }
 
 function getVersion() {

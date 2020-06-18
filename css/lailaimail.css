@@ -25,7 +25,7 @@
     margin: auto;
     position: relative;
     width: 400px;
-    height: 900px;
+    min-height: 900px;
 }
 
 #capture {
@@ -34,13 +34,23 @@
     /*left: 75px;*/
     /*top: 75px;*/
     width: 400px;
-    height: 900px;
+    min-height: 900px;
 }
 
-#background-img {
-    position: absolute;
-    left: 0;
-    top: 0;
+#background {
+    position: relative;
+    width: 400px;
+    min-height: 900px;
+    z-index: -100;
+}
+
+#background > img {
+    display: block;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    outline: 0;
+    position: static;
     width: 400px;
     z-index: -100;
 }
@@ -49,16 +59,11 @@
     position: absolute;
     left: 10px;
     top: 120px;
-    /*position: absolute;*/
-    /*top: 180px;*/
-    /*left: 5px;*/
     width: 390px;
-    max-height: 705px;
+    /*max-height: 705px;*/
     border: none;
-    /*padding-top: 120px;*/
-    /*height: 710px;*/
     overflow: auto;
-    overflow-y:visible;
+    /*overflow-y:visible;*/
 }
 
 #message-time {

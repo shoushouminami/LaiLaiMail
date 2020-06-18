@@ -41,19 +41,13 @@
             <a class="disabled" href="javascript:void(0);" onclick="closeHelp(false)">展开说明</a>
         </div>
     </div>
-
-    <!--    <div class="control-line">-->
-    <!--        <button class="control-button" onclick="appendOneLine()">+文字气泡</button><button class="control-button" onclick="appendImageLine()">+图片气泡</button>-->
-    <!--    </div>-->
-    <!--    <div class="control-line">-->
-    <!--        <button class="control-button" onclick="removeLast()">-删除气泡</button><button class="control-button" onclick="saveImage()">√保存截图</button>-->
-    <!--    </div>-->
-    <!--    <div id="log-area">-->
-    <!--    </div>-->
 </div>
 <div id="center-wrap" onclick="">
     <div id="capture">
-        <img id="background-img" src="image/background.jpg" alt=""/>
+        <div id="background">
+            <img id="background-img" src="image/background-top.jpg" alt=""/>
+            <img src="image/background-bottom.jpg" alt=""/>
+        </div>
         <div id="message-canvas">
             <div id="message-time" contenteditable="true"
                  onkeypress="saveMessages()" onkeydown="saveMessages()" onkeyup="saveMessages()">
@@ -101,7 +95,8 @@
     <img src="image/download.png" alt="点击下载图片">
     <div class="loader disabled"></div>
 </button>
-<!--    <button id="fullscreen-button" onclick="enterFullscreen()">全屏显示</button>-->
+<!--<button id="fullscreen-button" onclick="extendBackground()">+</button>-->
+<!--<button  onclick="shrinkBackground()">-</button>-->
 <template id="one-line-template">
     <div class="one-line message height-adjustable" onclick="">
         <img class="one-line-background line-background height-adjustable one-line-background-left"

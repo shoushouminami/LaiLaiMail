@@ -171,6 +171,9 @@ function appendImageLine2(path) {
     let template = document.createElement("template");
     template.innerHTML = document.getElementById("image-line-template").innerHTML;
     let oneLine = document.getElementById("message-canvas").appendChild(template.content.firstElementChild);
+    oneLine.lastElementChild.onload = function() {
+        adjustCanvasHeight();
+    }
     oneLine.lastElementChild.setAttribute("src", path);
     adjustCanvasHeight();
 }
@@ -184,7 +187,7 @@ function appendImageFromFile(file) {
     reader.readAsDataURL(file);
 }
 
-function appendImageLine() {
+function appendImageLineFromFilePicker() {
     let fileSelector = document.createElement("input");
     fileSelector.type = "file";
     fileSelector.accept = "image/png, image/jpeg";

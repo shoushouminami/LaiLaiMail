@@ -99,8 +99,6 @@ function appendOneLine(text) {
     oneLine.querySelectorAll(".message-text").forEach((e) => {
         adjustLineLength(e);
     })
-
-    adjustCanvasHeight();
 }
 
 function appendOneLineFromInput() {
@@ -110,6 +108,8 @@ function appendOneLineFromInput() {
         input.innerText = "";
     }
     saveMessages();
+    input.scrollIntoView();
+    input.focus();
 }
 
 // adjust background height and message-canvas height if messages grow too long
@@ -128,22 +128,12 @@ function adjustCanvasHeight() {
     let canvasHeight = messageCanvas.scrollHeight + parseInt(canvasCss.top) + inputAreaHeight;
     // 10 for extra buffer
     if (canvasHeight + 10 > messageCanvas.parentElement.scrollHeight) {
-        extendBackground();
-        setTimeout(adjustCanvasHeight, 10);
+        extendBackground(adjustCanvasHeight);
     } else if (canvasHeight + 10 + extendedElemHeight < messageCanvas.parentElement.scrollHeight) { // extension height = 111px
         if (shrinkBackground()) {
-            setTimeout(adjustCanvasHeight, 10);
+            setTimeout(adjustCanvasHeight, 30);
         }
     }
-
-    // let childrenHeight = 0;
-    // for (const child of messageCanvas.children) {
-    //     childrenHeight += child.clientHeight;
-    // }
-    //
-    // if (childrenHeight + 50 > messageCanvas.clientHeight) {
-    //
-    // }
 }
 
 function removeLast() {
@@ -171,11 +161,11 @@ function appendImageLine2(path) {
     let template = document.createElement("template");
     template.innerHTML = document.getElementById("image-line-template").innerHTML;
     let oneLine = document.getElementById("message-canvas").appendChild(template.content.firstElementChild);
-    oneLine.lastElementChild.onload = function() {
-        adjustCanvasHeight();
-    }
+    oneLine.lastElementChild.addEventListener("load", function (event) {
+        // write bogus attribute to trigger the observer
+        event.target.setAttribute("data-loaded", "true");
+    });
     oneLine.lastElementChild.setAttribute("src", path);
-    adjustCanvasHeight();
 }
 
 function appendImageFromFile(file) {
@@ -206,7 +196,6 @@ function appendImageLineFromFilePicker() {
 function removeLine(elem) {
     elem.parentElement.remove();
     saveMessages();
-    adjustCanvasHeight();
 }
 
 function dropHandler(event) {
@@ -397,11 +386,12 @@ function drawText(elem, singleLineHeight, scale = 1) {
 }
 
 const BACKGROUND_EXTENSION_CLASS_NAME = "extended";
-function extendBackground() {
+function extendBackground(onload) {
     let background = document.getElementById("background");
     let img = document.createElement("img");
     img.src = "image/background-extend.jpg";
     img.classList.add(BACKGROUND_EXTENSION_CLASS_NAME);
+    img.onload = onload;
     background.insertBefore(img, background.lastElementChild);
 }
 
@@ -496,7 +486,7 @@ function saveMessages() {
     saveLocalState();
 }
 
-function preload(imageUrls) {
+function preloadImages(imageUrls) {
     return Promise.all(Array.from(imageUrls).map(url => {
         let img = new Image();
         img.url = url;
@@ -512,6 +502,7 @@ function preload(imageUrls) {
         });
     }));
 }
+
 // init
 document.addEventListener("DOMContentLoaded", function (event) {
     document.body.addEventListener("drop", function (event2) {
@@ -525,8 +516,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     // apply state
     closeHelp(state.checkedVersion === getNameVersion() && !state.helpMenu);
 
-// wait for all images to load then apply
-    preload([
+    // wait for all images to load then load messages from local store
+    preloadImages([
         "image/1line-left-1.png",
         "image/1line-mid-1.png",
         "image/1line-right-1.png",
@@ -535,9 +526,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "image/4line-1.png",
         "image/logo.png"
     ]).then(function () {
+        // setup observer to auto extend background
+        new MutationObserver(adjustCanvasHeight).observe(document.getElementById("message-canvas"), {attributes: true, childList: true, subtree: true});
         loadMessages();
         saveMessages();
+        adjustCanvasHeight();
     });
 });
 
-
+document.addEventListener("readystatechange", event => {
+    if (event.target.readyState === "complete") {
+        adjustCanvasHeight();
+    }
+});

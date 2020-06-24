@@ -406,7 +406,7 @@ function shrinkBackground() {
 }
 
 function getVersion() {
-    return "v0.4";
+    return "v0.5";
 }
 
 function getNameVersion() {
